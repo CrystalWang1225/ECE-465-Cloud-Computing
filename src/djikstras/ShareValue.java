@@ -1,4 +1,4 @@
-package djikstras;
+package src.djikstras;
 import java.util.concurrent.atomic.*;
 public class ShareValue {
     private AtomicInteger val;
