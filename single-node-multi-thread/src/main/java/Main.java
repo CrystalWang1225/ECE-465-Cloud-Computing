@@ -1,4 +1,4 @@
-/*Main class*/
+/*Main*/
 import java.util.ArrayList;
 import java.util.List;
 import graphModel.*;
