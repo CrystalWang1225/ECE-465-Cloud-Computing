@@ -11,7 +11,7 @@ import java.time.Instant;
 
 class Main{
 
-    private static final String INPUT_FILE = "D:/Documents/ECE465-Cloud-Computing/single-node-multi-thread/input50.txt";
+    private static final String INPUT_FILE = "D:/Documents/ECE465-Cloud-Computing/single-node-multi-thread/input100.txt";
     public static void main(String[] args){
         Graph graph;
         try {
@@ -20,7 +20,7 @@ class Main{
             List<Integer> results = runDijkstra(graph);
             Instant finish = Instant.now();
             long timeElapsed = Duration.between(start, finish).toMillis();
-            IOUtils.writeResults("output50.txt", results, timeElapsed);
+            IOUtils.writeResults("output100.txt", results, timeElapsed);
         } catch (InvalidDataException e) {
             System.out.println(e.getMessage());
         }
