@@ -35,3 +35,5 @@ This process repeats until eventually there will be no more nodes to go to, sinc
 * Big: 47 ms
 * Very big: 211 ms
 
+#### Time complexity  
+Based on the ratios of the run times and the number of nodes for each nest case, the time complexity of our algorithm seems close to O(v<sup>2</sup> + e). It is possible that the compare and sets are failing many times due to the large number of threads being created. This could be improved by adding intended modificaitions to the non-blocking algorithm. Alternatively, blocking concurrency may be a better choice, since each thread somewhat depends on the results of other threads in order to make better decisions.
