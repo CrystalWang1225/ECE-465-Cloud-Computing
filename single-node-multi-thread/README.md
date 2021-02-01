@@ -26,7 +26,7 @@ This process repeats until eventually there will be no more nodes to go to, sinc
 [input](https://github.com/CrystalWang1225/ECE465-Cloud-Computing/blob/main/single-node-multi-thread/input20.txt) & [output](https://github.com/CrystalWang1225/ECE465-Cloud-Computing/blob/main/single-node-multi-thread/output20.txt)
 * Big directed graph with 50 nodes and 50% edge density (1225 edges total)  
 [input](https://github.com/CrystalWang1225/ECE465-Cloud-Computing/blob/main/single-node-multi-thread/input50.txt) & [output](https://github.com/CrystalWang1225/ECE465-Cloud-Computing/blob/main/single-node-multi-thread/input50.txt)
-* Very big directed graph with 100 nodes and 50% edge density (4950 edges total)
+* Very big directed graph with 100 nodes and 50% edge density (4950 edges total)  
 [input](https://github.com/CrystalWang1225/ECE465-Cloud-Computing/blob/main/single-node-multi-thread/input100.txt) & [output](https://github.com/CrystalWang1225/ECE465-Cloud-Computing/blob/main/single-node-multi-thread/input100.txt)
 
 #### Run Time
