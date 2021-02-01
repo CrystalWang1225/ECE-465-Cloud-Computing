@@ -15,17 +15,20 @@ public class IOUtils {
     private IOUtils() {
     }
 
-    public static void writeResults(String fileName, List<Integer> results) throws InvalidDataException {
+    public static void writeResults(String fileName, List<Integer> results, long timeElapsed) throws InvalidDataException {
         File file = new File(fileName);
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(file.toPath())) {
+            int i = 0;
+            bufferedWriter.append("Time elapsed: " + String.valueOf(timeElapsed) + " ms").append('\n');
             for (Integer result : results) {
                 String line;
                 if (result < Integer.MAX_VALUE) {
-                    line = String.valueOf(result);
+                    line = "Node " + i + ": " + String.valueOf(result);
                 } else {
                     line = "Inf";
                 }
                 bufferedWriter.append(line).append('\n');
+                i++;
             }
         } catch (IOException e) {
             throw new InvalidDataException(IO_ERROR + e.getMessage());
