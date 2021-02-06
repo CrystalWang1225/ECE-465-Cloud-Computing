@@ -5,13 +5,14 @@ import graphModel.*;
 import multithread.*;
 import util.*;
 import validation.*;
+import java.util.concurrent.PriorityBlockingQueue;
 
 import java.time.Duration;
 import java.time.Instant;
 
 class Main{
 
-    private static final String INPUT_FILE = "D:/Documents/ECE465-Cloud-Computing/single-node-multi-thread/input100.txt";
+    private static final String INPUT_FILE = "D:/Documents/ECE465-Cloud-Computing/single-node-multi-thread/input6.txt";
     public static void main(String[] args){
         Graph graph;
         try {
@@ -20,7 +21,7 @@ class Main{
             List<Integer> results = runDijkstra(graph);
             Instant finish = Instant.now();
             long timeElapsed = Duration.between(start, finish).toMillis();
-            IOUtils.writeResults("output100.txt", results, timeElapsed);
+            IOUtils.writeResults("output6.txt", results, timeElapsed);
         } catch (InvalidDataException e) {
             System.out.println(e.getMessage());
         }
@@ -29,6 +30,8 @@ class Main{
     private static List<Integer> runDijkstra(Graph graph){
         ArrayList<Node> nodeList = new ArrayList<Node>();
         ArrayList<ArrayList<Integer>> sortedEdges = new ArrayList<ArrayList<Integer>>();
+        ArrayList<Integer> visited = new ArrayList<>();
+        //Initialize list of nodes and sort edges for each node
         for (int i = 0; i < graph.getNumberOfNodes(); i++){
             if(i == 0){
                 nodeList.add(new Node(i,0));
@@ -37,27 +40,46 @@ class Main{
                 nodeList.add(new Node(i,Integer.MAX_VALUE));
             }
             sortedEdges.add(sortEdges(graph.getEdges().get(i)));
+            visited.add(Integer.MAX_VALUE);
         }
-        ArrayList<Integer> path = new ArrayList<Integer>();
-        path.add(0);
+        PriorityBlockingQueue<Node> nodeQ = new PriorityBlockingQueue<Node>();
+        nodeQ.offer(nodeList.get(0));
         ArrayList<Thread> threads = new ArrayList<Thread>();
-        for(int i = 0; i < sortedEdges.get(0).size(); i++) {
-            ArrayList<Integer> nextPath = new ArrayList<>(path);
-            nextPath.add(sortedEdges.get(0).get(i));
-            Thread thread = new Thread(new Dthread(nodeList.get(sortedEdges.get(0).get(i)),
-                    graph,
-                    sortedEdges,
-                    path,
-                    graph.getEdges().get(0).get(sortedEdges.get(0).get(i)),
-                    nodeList));
-            thread.start();
-            threads.add(thread);
-        }
-        for (int i = 0; i < threads.size(); i++) {
-            try {
-                threads.get(i).join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        while(!nodeQ.isEmpty()){
+            Node currentNode = nodeQ.poll();
+            if(currentNode.getDistance() >= visited.get(currentNode.getNode())){
+                continue;
+            }
+            else{
+                visited.set(currentNode.getNode(), currentNode.getDistance());
+            }
+            for(int i = 0; i < sortedEdges.get(currentNode.getNode()).size(); i++) {
+                Node nextNode = nodeList.get(sortedEdges.get(currentNode.getNode()).get(i));
+
+                // check and update distance if needed
+                if(currentNode.getDistance() +
+                        graph.getEdges().get(currentNode.getNode()).get(nextNode.getNode())
+                        < nextNode.getDistance()){
+                   nextNode.casDistance(nextNode.getDistance(),
+                            currentNode.getDistance() +
+                                    graph.getEdges().get(currentNode.getNode()).get(nextNode.getNode()));
+                }
+                visited.set(nextNode.getNode(), nextNode.getDistance());
+                Thread thread = new Thread(new Dthread(currentNode,
+                        nextNode,
+                        graph,
+                        sortedEdges,
+                        nodeList,
+                        nodeQ));
+                thread.start();
+                threads.add(thread);
+            }
+            for (int i = 0; i < threads.size(); i++) {
+                try {
+                    threads.get(i).join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
         List<Integer> results = new ArrayList<Integer>();

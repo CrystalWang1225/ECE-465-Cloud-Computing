@@ -1,4 +1,4 @@
-Time elapsed: 16 ms
+Time elapsed: 14 ms
 Node 0: 0
 Node 1: 503
 Node 2: 536
