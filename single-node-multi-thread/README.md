@@ -35,6 +35,9 @@ This process repeats until eventually there will be no more nodes to go to, sinc
 * Big: 47 ms
 * Very big: 211 ms
 
+#### Time complexity  
+Based on the ratios of the run times and the number of nodes for each test case, the time complexity of our algorithm seems close to O(v<sup>2</sup> + e). It is possible that the compare and sets are failing many times due to the large number of threads being created. This could be improved by adding intended modificaitions to the non-blocking algorithm. Alternatively, blocking concurrency may be a better choice, since each thread somewhat depends on the results of other threads in order to make better decisions.
+
 #### 2/5 Update
 * New runtime for small: 3 ms
 * New runtime for medium: 8 ms
@@ -47,4 +50,3 @@ At the beginning on the improved algorithm, the number of threads created is equ
 The advantage of multiple threads here is the ability to increase the amount of nodes considered by the greedy algorithm at one step. An list of visited nodes with the latest distance value of that node is also kept in record. When polling a node that has already been visited, the new distance value of the polled node is compared with the distance value in the visited list. This avoids redundant examination of nodes that have already been visited, and it also prevents the situation of failing to update visited nodes with new distances.  
 Additional logic is implemented to further decrease the runtime and time complexity.  
 The time complexity of the algorithm is now much lower, closer to O(v).
-
