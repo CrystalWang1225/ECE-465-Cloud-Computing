@@ -35,3 +35,16 @@ This process repeats until eventually there will be no more nodes to go to, sinc
 * Big: 47 ms
 * Very big: 211 ms
 
+#### 2/5 Update
+* New runtime for small: 3 ms
+* New runtime for medium: 8 ms
+* New runtime for big: 22 ms
+* New runtime for very big: 59 ms
+
+We found out that our threads never failed in comparing and setting, so there was no point in improving the non-blocking concurrency algorithm to include intended modifications. Rather, our implementation of multi-threading was too clumsy. Too many threads were being spawned, which slowed the algorithm down.  
+We decided to include a Priority Blocking Queue shared among all threads. This way we could keep track of the nodes found by all the threads is order of ascending distance.  
+At the beginning on the improved algorithm, the number of threads created is equal to the number of edges of the source node. Each thread will look at its adjacent nodes, and if the distance of those nodes can be updated to a smaller value, then the update will proceed (with non-blocking concurrency), and those will be inserted into the Priority Blocking Queue. The main thread will wait for all the threads to finish, before polling the next node from the Priority Blocking Queue to branch off of.
+The advantage of multiple threads here is the ability to increase the amount of nodes considered by the greedy algorithm at one step. An list of visited nodes with the latest distance value of that node is also kept in record. When polling a node that has already been visited, the new distance value of the polled node is compared with the distance value in the visited list. This avoids redundant examination of nodes that have already been visited, and it also prevents the situation of failing to update visited nodes with new distances.  
+Additional logic is implemented to further decrease the runtime and time complexity.  
+The time complexity of the algorithm is now much lower, closer to O(v).
+

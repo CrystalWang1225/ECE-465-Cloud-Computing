@@ -12,7 +12,7 @@ import java.time.Instant;
 
 class Main{
 
-    private static final String INPUT_FILE = "D:/Documents/ECE465-Cloud-Computing/single-node-multi-thread/input6.txt";
+    private static final String INPUT_FILE = "D:/Documents/ECE465-Cloud-Computing/single-node-multi-thread/input100.txt";
     public static void main(String[] args){
         Graph graph;
         try {
@@ -21,7 +21,7 @@ class Main{
             List<Integer> results = runDijkstra(graph);
             Instant finish = Instant.now();
             long timeElapsed = Duration.between(start, finish).toMillis();
-            IOUtils.writeResults("output6.txt", results, timeElapsed);
+            IOUtils.writeResults("output100.txt", results, timeElapsed);
         } catch (InvalidDataException e) {
             System.out.println(e.getMessage());
         }
@@ -63,16 +63,16 @@ class Main{
                    nextNode.casDistance(nextNode.getDistance(),
                             currentNode.getDistance() +
                                     graph.getEdges().get(currentNode.getNode()).get(nextNode.getNode()));
+                    visited.set(nextNode.getNode(), nextNode.getDistance());
+                    Thread thread = new Thread(new Dthread(currentNode,
+                            nextNode,
+                            graph,
+                            sortedEdges,
+                            nodeList,
+                            nodeQ));
+                    thread.start();
+                    threads.add(thread);
                 }
-                visited.set(nextNode.getNode(), nextNode.getDistance());
-                Thread thread = new Thread(new Dthread(currentNode,
-                        nextNode,
-                        graph,
-                        sortedEdges,
-                        nodeList,
-                        nodeQ));
-                thread.start();
-                threads.add(thread);
             }
             for (int i = 0; i < threads.size(); i++) {
                 try {
