@@ -12,7 +12,7 @@ import java.time.Instant;
 
 class Main{
 
-    private static final String INPUT_FILE = "D:/Documents/ECE465-Cloud-Computing/single-node-multi-thread/input100.txt";
+    private static final String INPUT_FILE = "D:/Documents/ECE465-Cloud-Computing/single-node-multi-thread/input6.txt";
     public static void main(String[] args){
         Graph graph;
         try {
@@ -21,7 +21,7 @@ class Main{
             List<Integer> results = runDijkstra(graph);
             Instant finish = Instant.now();
             long timeElapsed = Duration.between(start, finish).toMillis();
-            IOUtils.writeResults("output100.txt", results, timeElapsed);
+            IOUtils.writeResults("output6.txt", results, timeElapsed);
         } catch (InvalidDataException e) {
             System.out.println(e.getMessage());
         }
@@ -29,7 +29,6 @@ class Main{
 
     private static List<Integer> runDijkstra(Graph graph){
         ArrayList<Node> nodeList = new ArrayList<Node>();
-        ArrayList<ArrayList<Integer>> sortedEdges = new ArrayList<ArrayList<Integer>>();
         ArrayList<Integer> visited = new ArrayList<>();
         //Initialize list of nodes and sort edges for each node
         for (int i = 0; i < graph.getNumberOfNodes(); i++){
@@ -39,7 +38,6 @@ class Main{
             else{
                 nodeList.add(new Node(i,Integer.MAX_VALUE));
             }
-            sortedEdges.add(sortEdges(graph.getEdges().get(i)));
             visited.add(Integer.MAX_VALUE);
         }
         PriorityBlockingQueue<Node> nodeQ = new PriorityBlockingQueue<Node>();
@@ -53,8 +51,9 @@ class Main{
             else{
                 visited.set(currentNode.getNode(), currentNode.getDistance());
             }
-            for(int i = 0; i < sortedEdges.get(currentNode.getNode()).size(); i++) {
-                Node nextNode = nodeList.get(sortedEdges.get(currentNode.getNode()).get(i));
+            for(int i = 0; i < graph.getNumberOfNodes(); i++) {
+                Node nextNode = nodeList.get(i);
+                if(graph.getEdges().get(currentNode.getNode()).get(i) <= 0) continue;
 
                 // check and update distance if needed
                 if(currentNode.getDistance() +
@@ -67,7 +66,6 @@ class Main{
                     Thread thread = new Thread(new Dthread(currentNode,
                             nextNode,
                             graph,
-                            sortedEdges,
                             nodeList,
                             nodeQ));
                     thread.start();

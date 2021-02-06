@@ -40,9 +40,10 @@ Based on the ratios of the run times and the number of nodes for each test case,
 
 #### 2/5 Update
 * New runtime for small: 3 ms
-* New runtime for medium: 8 ms
-* New runtime for big: 22 ms
-* New runtime for very big: 59 ms
+* New runtime for medium: 9 ms
+* New runtime for big: 17 ms
+* New runtime for very big: 41 ms
+* New runtime for 1000 nodes: 310 ms
 
 We found out that our threads never failed in comparing and setting, so there was no point in improving the non-blocking concurrency algorithm to include intended modifications. Rather, our implementation of multi-threading was too clumsy. Too many threads were being spawned, which slowed the algorithm down.  
 We decided to include a Priority Blocking Queue shared among all threads. This way we could keep track of the nodes found by all the threads is order of ascending distance.  
