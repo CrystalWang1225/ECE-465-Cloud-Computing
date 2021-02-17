@@ -17,15 +17,15 @@ Currently, we are running this algorithm on just one computer, but it is ready t
 The numbers in the input file names show how much graph nodes those test cases have. Each test case has 50% graph node density.
 
 #### Runtimes
-6 nodes: 6 ms
-20 nodes: 10 ms
-50 nodes: 18 ms
-100 nodes: 28 ms
-200 nodes: 45 ms
-300 nodes: 70 ms
-500 nodes: 110 ms
-700 nodes: 152 ms
-1000 nodes: 238 ms
+6 nodes: 6 ms  
+20 nodes: 10 ms  
+50 nodes: 18 ms  
+100 nodes: 28 ms  
+200 nodes: 45 ms  
+300 nodes: 70 ms  
+500 nodes: 110 ms  
+700 nodes: 152 ms  
+1000 nodes: 238 ms  
 
 #### Time Complexity
 Previously, we improved the time complexity of the single-node algorithm to close to O(v). This multi-node algorithm has slightly faster run times, but still looks like O(v).
