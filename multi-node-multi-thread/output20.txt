@@ -1,0 +1,21 @@
+Time elapsed: 10 ms
+Node 0: 0
+Node 1: 503
+Node 2: 536
+Node 3: 202
+Node 4: 326
+Node 5: 165
+Node 6: 483
+Node 7: 215
+Node 8: 420
+Node 9: 296
+Node 10: 74
+Node 11: 175
+Node 12: 9
+Node 13: 166
+Node 14: 169
+Node 15: 153
+Node 16: 236
+Node 17: 33
+Node 18: 139
+Node 19: 463
