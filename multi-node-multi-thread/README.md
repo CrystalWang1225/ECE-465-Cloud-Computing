@@ -14,8 +14,8 @@ This algorithm is similar to the single-node multithreaded algorithm, except the
 Currently, we are running this algorithm on just one computer, but it is ready to be implemented on a platform with actual multiple CPUs.
 
 #### Test Cases
-The numbers in the input file names show how much graph nodes those test cases have. Each test case has 50% graph node density. Each test was run with 4 cores.
-To run a test with an existing input file: java -jar ./target/multi-node-multi-thread-0.0.1.jar {number of cores} {input file name}
+The numbers in the input file names show how much graph nodes those test cases have. Each test case has 50% graph node density. Each test was run with 4 cores.  
+To run a test with an existing input file: java -jar ./target/multi-node-multi-thread-0.0.1.jar {number of cores} {input file name}  
 To run a test by creating a new graph: java -jar ./target/multi-node-multi-thread-0.0.1.jar {number of cores} {number of graph nodes} {graph node density (50 = 50%)}
 
 
