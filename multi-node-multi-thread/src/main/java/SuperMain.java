@@ -1,4 +1,6 @@
 /*Main*/
+import java.io.IOException;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 import graphModel.*;
@@ -10,25 +12,30 @@ import java.util.concurrent.PriorityBlockingQueue;
 import java.time.Duration;
 import java.time.Instant;
 
-class Main{
+class SuperMain {
 
     private static String inputFile, outputFile;
-    public static void main(String[] args){
+    public static void main(String[] args){ //number of cores, number of nodes, edge density, port numbers
         Graph graph;
         try {
-            int numCores;
-            if (args.length > 2) { //with graph generation
+            int numCores = Integer.parseInt(args[0]);
+            int portList[] = new int[numCores];
+            if (args.length > 2 + numCores) { //with graph generation
                 inputFile = "input" + args[1] + ".txt";
                 graph = GraphUtils.generateGraphMatrix(Integer.parseInt(args[1]), Integer.parseInt(args[2]));
                 IOUtils.writeGraph(inputFile, graph);
+                for (int i = 0; i < numCores; i++){
+                    portList[i] = Integer.parseInt(args[3 + i]);
+                }
             } else {
                 inputFile = args[1];
                 graph = IOUtils.readGraph(inputFile);
+                for (int i = 0; i < numCores; i++){
+                    portList[i] = Integer.parseInt(args[2 + i]);
+                }
             }
             outputFile = "output" + inputFile.substring(5);
-            numCores = Integer.parseInt(args[0]);
-            //run and print execution time
-            Instant start = Instant.now();
+            Instant start = Instant.now(); //for execution time
             List<Integer> results = runDijkstra(graph, numCores);
             Instant finish = Instant.now();
             long timeElapsed = Duration.between(start, finish).toMillis();
@@ -37,7 +44,6 @@ class Main{
             System.out.println(e.getMessage());
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            System.out.println("Invalid command format");
         }
     }
 
@@ -89,7 +95,7 @@ class Main{
                             currentNode.getDistance() +
                                     graph.getEdges().get(currentNode.getNode()).get(nextNode.getNode()));
                     visited.set(nextNode.getNode(), nextNode.getDistance());
-                    Thread thread = new Thread(new Dthread(currentNode,
+                    Thread thread = new Thread(new SuperThread(currentNode,
                             nextNode,
                             graph,
                             nodeList,

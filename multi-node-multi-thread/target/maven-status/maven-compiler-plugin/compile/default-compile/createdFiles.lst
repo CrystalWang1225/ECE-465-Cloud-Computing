@@ -5,3 +5,4 @@ util\GraphUtils.class
 graphModel\Node.class
 validation\InvalidDataException.class
 util\IOUtils.class
+Main2.class

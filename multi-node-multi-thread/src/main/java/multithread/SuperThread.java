@@ -4,14 +4,14 @@ import graphModel.*;
 import java.util.ArrayList;
 import java.util.concurrent.PriorityBlockingQueue;
 
-public class Dthread implements Runnable {
+public class SuperThread implements Runnable {
     private Node prevNode;
     private Node currentNode;
     private Graph graph;
     private ArrayList<Node> nodeList;
     private PriorityBlockingQueue<Node> nodeQ;
-    public Dthread(Node prevNode, Node currentNode, Graph graph,
-                   ArrayList<Node> nodeList, PriorityBlockingQueue<Node> nodeQ){
+    public SuperThread(Node prevNode, Node currentNode, Graph graph,
+                       ArrayList<Node> nodeList, PriorityBlockingQueue<Node> nodeQ){
         this.prevNode = prevNode;
         this.currentNode = currentNode;
         this.graph = graph;
