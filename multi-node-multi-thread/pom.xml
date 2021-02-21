@@ -25,7 +25,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>SuperMain</mainClass>
+                            <mainClass>ManagerMain</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

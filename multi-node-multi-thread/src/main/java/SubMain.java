@@ -82,7 +82,7 @@ class SubMain {
                             currentNode.getDistance() +
                                     graph.getEdges().get(currentNode.getNode()).get(nextNode.getNode()));
                     visited.set(nextNode.getNode(), nextNode.getDistance());
-                    Thread thread = new Thread(new SuperThread(currentNode,
+                    Thread thread = new Thread(new ManagerThread(currentNode,
                             nextNode,
                             graph,
                             nodeList,
