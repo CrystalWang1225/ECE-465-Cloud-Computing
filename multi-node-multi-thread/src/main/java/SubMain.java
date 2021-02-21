@@ -16,23 +16,12 @@ class SubMain {
     public static void main(String[] args){
         Graph graph;
         try {
-            int numCores;
-            if (args.length > 2) { //with graph generation
-                inputFile = "input" + args[1] + ".txt";
-                graph = GraphUtils.generateGraphMatrix(Integer.parseInt(args[1]), Integer.parseInt(args[2]));
-                IOUtils.writeGraph(inputFile, graph);
-            } else {
-                inputFile = args[1];
-                graph = IOUtils.readGraph(inputFile);
-            }
-            outputFile = "output" + inputFile.substring(5);
-            numCores = Integer.parseInt(args[0]);
-            //run and print execution time
-            Instant start = Instant.now();
-            List<Integer> results = runDijkstra(graph, numCores);
-            Instant finish = Instant.now();
-            long timeElapsed = Duration.between(start, finish).toMillis();
-            IOUtils.writeResults(outputFile, results, timeElapsed);
+            int numThreads = Integer.parseInt(args[0]); //This should be equal to how many cores this node has
+            inputFile = args[1];
+            graph = IOUtils.readGraph(inputFile);
+            int portNum = Integer.parseInt(args[2]);
+            setupClient(portNum);
+            List<Integer> results = runDijkstra(graph, numThreads);
         } catch (InvalidDataException e) {
             System.out.println(e.getMessage());
         } catch (NumberFormatException e) {
@@ -41,7 +30,11 @@ class SubMain {
         }
     }
 
-    private static List<Integer> runDijkstra(Graph graph, int numCores){
+    private static void setupClient(int portNum){
+
+    }
+
+    private static List<Integer> runDijkstra(Graph graph, int numThreads){
         ArrayList<Node> nodeList = new ArrayList<Node>();
         ArrayList<Integer> visited = new ArrayList<>();
         //Initialize list of nodes and sort edges for each node
@@ -69,7 +62,7 @@ class SubMain {
                 visited.set(currentNode.getNode(), currentNode.getDistance());
             }
             for(int i = 0; i < graph.getNumberOfNodes(); i++) {
-                if(coreCount == numCores) { //Wait for each core to finish multithreading
+                if(coreCount == numThreads) { //Don't spawn more threads than cores
                     for (int j = 0; j < threads.size(); j++) {
                         try {
                             threads.get(j).join();
