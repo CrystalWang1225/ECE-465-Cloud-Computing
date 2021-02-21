@@ -17,8 +17,7 @@ public class LocalDijkstrasThread implements Runnable{
 
     public LocalDijkstrasThread(Graph graph, int firstNode, int lastNode,
                           Node currentNode, ArrayList<Node> nodeList,
-                          PriorityBlockingQueue<Node> localQ, AtomicBoolean queueEmpty,
-                          CyclicBarrier barrier){
+                          PriorityBlockingQueue<Node> localQ){
         this.graph = graph;
         this.firstNode = firstNode;
         this.lastNode = lastNode;
@@ -30,7 +29,7 @@ public class LocalDijkstrasThread implements Runnable{
     @Override
     public void run() {
         int nodeID = currentNode.getNode();
-        for(int i = 0; i < graph.getNumberOfNodes(); i++){ // loops through available edges in ascending cost
+        for(int i = firstNode; i < lastNode; i++){ // loops through available edges in ascending cost
             Node nextNode = nodeList.get(i);
             if(graph.getEdges().get(currentNode.getNode()).get(i) <= 0) continue;
             int nextID = nextNode.getNode();

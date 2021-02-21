@@ -2,7 +2,9 @@ package messages;
 
 import graphModel.*;
 
-public class SetupData {
+import java.io.Serializable;
+
+public class SetupData implements Serializable {
     private final Graph graph;
     private final int firstNode, lastNode;
 

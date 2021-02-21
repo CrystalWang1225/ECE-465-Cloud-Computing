@@ -1,8 +1,9 @@
 package graphModel;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Graph {
+public class Graph implements Serializable {
     private int sourceNode;
     private List<List<Integer>> edges;
     private int numberOfNodes;

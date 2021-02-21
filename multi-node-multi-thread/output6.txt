@@ -1,7 +1,7 @@
-Time elapsed: 6 ms
+Time elapsed: 11190 ms
 Node 0: 0
-Node 1: 867
-Node 2: 854
-Node 3: 921
-Node 4: 874
-Node 5: 595
+Inf
+Inf
+Inf
+Inf
+Inf

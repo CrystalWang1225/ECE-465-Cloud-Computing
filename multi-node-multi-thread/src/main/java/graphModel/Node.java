@@ -1,8 +1,9 @@
 package graphModel;
 
+import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Node implements Comparable<Node> {
+public class Node implements Comparable<Node>, Serializable {
     private int node;
     private AtomicInteger distance = new AtomicInteger();
 

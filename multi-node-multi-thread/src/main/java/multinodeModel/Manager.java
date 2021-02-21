@@ -20,9 +20,10 @@ public class Manager {
 
     public List<Integer> multiDijk(Graph graph, int numCores, int[] portList){
         distance = new ArrayList<Integer>(graph.getNumberOfNodes());
-        //Initialize the distance to inifinity for every node except source node
+        //Initialize the distance to infinity for every node except source node
         for (int i = 0; i < graph.getNumberOfNodes(); i++){
             distance.add(i, Integer.MAX_VALUE);
+            visited.add(Integer.MAX_VALUE);
         }
         distance.set(graph.getSourceNode(), 0);
 
@@ -31,7 +32,7 @@ public class Manager {
         current = new Node(Integer.MIN_VALUE, Integer.MIN_VALUE);
         this.graph = graph;
 
-        MinNode minNode = new MinNode( globalQ, current, isFinished);
+        MinNode minNode = new MinNode( globalQ, current, isFinished, visited);
         CyclicBarrier cyclicBarrier = new CyclicBarrier(numCores, minNode);
 
         int start;
@@ -73,25 +74,34 @@ public class Manager {
 
     public static class MinNode implements Runnable{
 
-        private PriorityBlockingQueue<GlobalMinNode> globalMinNodes = new PriorityBlockingQueue<>();
+        private PriorityBlockingQueue<GlobalMinNode> globalMinNodes;
         private AtomicBoolean isFinished;
-
+        private List<Integer> visited;
         private Node current;
-        MinNode(PriorityBlockingQueue<GlobalMinNode> globalMinNodes, Node current, AtomicBoolean isFinished){
+        MinNode(PriorityBlockingQueue<GlobalMinNode> globalMinNodes, Node current,
+                AtomicBoolean isFinished, List<Integer> visited){
             this.globalMinNodes = globalMinNodes;
             this.current = current;
             this.isFinished = isFinished;
-
+            this.visited = visited;
         }
         @Override
         public void run(){
-            if (globalMinNodes.size() == 0){
+            if (globalMinNodes.isEmpty()){
                 isFinished.set(true);
 
             }else {
-                GlobalMinNode localMin = globalMinNodes.poll();
-                current.setNode(localMin.getNode());
-                current.setDistance(localMin.getDistance());
+                GlobalMinNode newMin = globalMinNodes.poll();
+                System.out.println("New Min number: "+newMin.getNode()+" New Min distance"+newMin.getDistance());
+                while(newMin.getDistance() >= visited.get(newMin.getNode())){
+                    if(globalMinNodes.isEmpty()) break;
+                    newMin = globalMinNodes.poll();
+                }
+                if(newMin.getDistance() < visited.get(newMin.getNode())) {
+                    visited.set(newMin.getNode(), newMin.getDistance());
+                    current.setNode(newMin.getNode());
+                    current.setDistance(newMin.getDistance());
+                }
             }
         }
     }

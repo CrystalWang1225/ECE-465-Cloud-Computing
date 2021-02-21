@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -41,7 +42,6 @@ public class ManagerThread implements Runnable {
 
    @Override
     public void run(){
-       List<Integer> fromWorker = new ArrayList<>();
        try(ServerSocket serverSocket = new ServerSocket(portNumber)){
            System.out.println("Connecting to " + portNumber);
            Socket socket = serverSocket.accept();
@@ -55,20 +55,27 @@ public class ManagerThread implements Runnable {
 
            while (!isFinished.get()) {
                GlobalMinNode response = (GlobalMinNode) objectInputStream.readObject();
+               if(response.getNode() >= 0 && response.getDistance()<visited.get(response.getNode())) {
+                   globalMinNodes.put(response);
+               }
 
-               objectOutputStream.writeObject(current);
-               objectOutputStream.reset();
-
-               globalMinNodes.add(response);
-
-               cyclicBarrier.wait();
-
+               try {
+                   cyclicBarrier.await();
+               }
+               catch(BrokenBarrierException e){
+                   e.printStackTrace();
+               }
+               if(!isFinished.get()) {
+                   GlobalMinNode toSend = new GlobalMinNode(current.getNode(), current.getDistance());
+                   objectOutputStream.writeObject(toSend);
+                   objectOutputStream.reset();
+               }
            }
 
-           objectOutputStream.writeObject(current);
+           objectOutputStream.writeObject(new GlobalMinNode(-1, -1));
            objectOutputStream.reset();
 
-           visited = (List<Integer>) objectInputStream.readObject();
+           ArrayList<Integer> fromWorker = (ArrayList<Integer>) objectInputStream.readObject();
            for (int i = startNode; i < endNode; i++){
                visited.set(i,fromWorker.get(i));
            }

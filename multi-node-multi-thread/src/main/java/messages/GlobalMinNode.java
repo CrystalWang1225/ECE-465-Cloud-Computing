@@ -1,6 +1,8 @@
 package messages;
 
-public class GlobalMinNode {
+import java.io.Serializable;
+
+public class GlobalMinNode implements Serializable, Comparable<GlobalMinNode> {
     private final int node, distance;
     public GlobalMinNode(int node, int distance){
         this.node = node;
@@ -11,5 +13,10 @@ public class GlobalMinNode {
     }
     public int getDistance(){
         return distance;
+    }
+
+    @Override
+    public int compareTo(GlobalMinNode other) {
+        return Integer.compare(this.distance, other.getDistance());
     }
 }
