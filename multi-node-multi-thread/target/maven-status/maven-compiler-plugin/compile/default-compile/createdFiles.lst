@@ -6,7 +6,6 @@ validation\InvalidDataException.class
 messages\GlobalMinNode.class
 SubMain.class
 multinodeModel\Manager$MinNode.class
-multinodeModel\LocalDijkstras$updateLocalMin.class
 multithread\ManagerThread.class
 multinodeModel\LocalDijkstras.class
 ManagerMain.class

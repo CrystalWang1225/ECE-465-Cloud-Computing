@@ -1,51 +1,51 @@
-Time elapsed: 8668 ms
-Inf
-Inf
-Inf
-Inf
-Inf
-Inf
-Inf
-Inf
-Inf
-Inf
-Inf
+Time elapsed: 4934 ms
+Node 0: 0
+Node 1: 206
+Node 2: 21
+Node 3: 56
+Node 4: 148
+Node 5: 118
+Node 6: 108
+Node 7: 82
+Node 8: 103
+Node 9: 109
+Node 10: 87
 Node 11: 17
-Inf
-Inf
-Inf
-Inf
-Inf
-Inf
-Inf
-Inf
+Node 12: 205
+Node 13: 171
+Node 14: 112
+Node 15: 239
+Node 16: 155
+Node 17: 133
+Node 18: 79
+Node 19: 167
 Node 20: 6
-Inf
-Inf
-Inf
+Node 21: 184
+Node 22: 240
+Node 23: 105
 Node 24: 3
-Inf
-Inf
-Inf
-Inf
-Inf
-Inf
-Inf
-Inf
-Inf
-Inf
-Inf
-Inf
-Inf
-Inf
-Inf
-Inf
-Inf
-Inf
-Inf
+Node 25: 212
+Node 26: 32
+Node 27: 215
+Node 28: 119
+Node 29: 158
+Node 30: 179
+Node 31: 212
+Node 32: 80
+Node 33: 108
+Node 34: 280
+Node 35: 66
+Node 36: 116
+Node 37: 110
+Node 38: 257
+Node 39: 194
+Node 40: 190
+Node 41: 124
+Node 42: 188
+Node 43: 205
 Node 44: 15
-Inf
-Inf
-Inf
-Inf
-Inf
+Node 45: 141
+Node 46: 189
+Node 47: 158
+Node 48: 93
+Node 49: 151

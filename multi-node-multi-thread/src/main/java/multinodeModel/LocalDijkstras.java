@@ -4,7 +4,6 @@ import graphModel.*;
 import messages.*;
 import multithread.LocalDijkstrasThread;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.net.Socket;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.io.*;
@@ -29,23 +28,29 @@ public class LocalDijkstras {
         this.numThreads = numThreads;
     }
 
-    private void queueEmptyRoutine(){
-        if (localQ.isEmpty()) {
-            System.out.println("LocalQ Empty");
-            System.out.println("localMin number: "+localMin.getNode()+" localMin distance: "+localMin.getDistance());
-            GlobalMinNode sendMin = new GlobalMinNode(localMin.getNode(), localMin.getDistance());
-            try {
-                clientOutput.writeObject(sendMin);
-                clientOutput.reset();
-                GlobalMinNode newMin = (GlobalMinNode) clientInput.readObject();
-                System.out.println("New Min number: "+newMin.getNode()+" New Min distance: "+newMin.getDistance());
-                if (newMin.getNode() >= 0) {
-                    nodeList.get(newMin.getNode()).setDistance(newMin.getDistance());
-                    localQ.offer(nodeList.get(newMin.getNode()));
-                    localMin = new Node(-1, Integer.MAX_VALUE); //reset local min for next round
+    private void EndRoutine(){
+        if(!localQ.isEmpty()) {
+            currentNode = localQ.poll();
+            if (currentNode.getDistance() >= visited.get(currentNode.getNode())) {
+                return;
+            }
+            GlobalMinNode sendMin = new GlobalMinNode(currentNode.getNode(), currentNode.getDistance());
+            //System.out.println("sendMin number: " + sendMin.getNode() + " sendMin distance: " + sendMin.getDistance());
+            if (sendMin.getNode() > 0) {
+                try {
+                    clientOutput.writeObject(sendMin);
+                    clientOutput.reset();
+                    GlobalMinNode newMin = (GlobalMinNode) clientInput.readObject();
+                    //System.out.println("New Min number: " + newMin.getNode() + " New Min distance: " + newMin.getDistance());
+                    if (newMin.getNode() >= 0) {
+                        if(newMin.getDistance()<nodeList.get(newMin.getNode()).getDistance()) {
+                            nodeList.get(newMin.getNode()).setDistance(newMin.getDistance());
+                            localQ.offer(nodeList.get(newMin.getNode()));
+                        }
+                    }
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
             }
         }
     }
@@ -55,26 +60,10 @@ public class LocalDijkstras {
         int coreCount = 0;
         while(!localQ.isEmpty()) {
             currentNode = localQ.poll();
-            GlobalMinNode sendMin = new GlobalMinNode(currentNode.getNode(), currentNode.getDistance());
-            System.out.println("sendMin number: "+sendMin.getNode()+" sendMin distance: "+sendMin.getDistance());
-            if(sendMin.getNode() > 0) {
-                try {
-                    clientOutput.writeObject(sendMin);
-                    clientOutput.reset();
-                    GlobalMinNode newMin = (GlobalMinNode) clientInput.readObject();
-                    System.out.println("New Min number: " + newMin.getNode() + " New Min distance: " + newMin.getDistance());
-                    if (newMin.getNode() >= 0) {
-                        nodeList.get(newMin.getNode()).setDistance(newMin.getDistance());
-                        localQ.offer(nodeList.get(newMin.getNode()));
-                    }
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
             //if(currentNode.getNode() < lastNode && currentNode.getNode() >= firstNode) {
                 if (currentNode.getDistance() >= visited.get(currentNode.getNode())) {
                     //No need to reevaluate distance of nodes adjacent to node i if visited[i] is less
-                    //queueEmptyRoutine();
+                    EndRoutine();
                     continue;
                 } else {
                     visited.set(currentNode.getNode(), currentNode.getDistance());
@@ -83,7 +72,7 @@ public class LocalDijkstras {
                     }
                 }
             //}
-            for (int i = firstNode; i < lastNode; i++) {
+            for (int i = 0; i < graph.getNumberOfNodes(); i++) {
                 if (coreCount == numThreads) { //Don't spawn more threads than cores available
                     for (int j = 0; j < threads.size(); j++) {
                         try {
@@ -108,7 +97,7 @@ public class LocalDijkstras {
                                     graph.getEdges().get(currentNode.getNode()).get(nextNode.getNode()));
                     visited.set(nextNode.getNode(), nextNode.getDistance());
                     Thread thread = new Thread(new LocalDijkstrasThread(graph, firstNode, lastNode,
-                            currentNode, nodeList, localQ));
+                            nextNode, nodeList, localQ));
                     thread.start();
                     threads.add(thread);
                     coreCount++;
@@ -124,19 +113,24 @@ public class LocalDijkstras {
             threads.clear();
             coreCount = 0;
             //If localQ is now empty, send local minimum to Manager, wait for new global minimum to begin from
-            //queueEmptyRoutine();
+            EndRoutine();
         }
         try {
-            System.out.println("All done");
-            ArrayList<Integer> distances = new ArrayList<>();
-            for(int i = firstNode; i < lastNode; i++){
-                distances.add(visited.get(i));
-            }
-            clientOutput.writeObject(visited);
+            //System.out.println("All done");
+            clientOutput.writeObject(new GlobalMinNode(-1,-1));
             clientOutput.reset();
-            client.close();
+            GlobalMinNode finalMessage = (GlobalMinNode) clientInput.readObject();
+            if(finalMessage.getNode() == -1) {
+                ArrayList<Integer> distances = new ArrayList<>();
+                for (int i = 0; i < graph.getNumberOfNodes(); i++) {
+                    distances.add(nodeList.get(i).getDistance());
+                }
+                clientOutput.writeObject(distances);
+                clientOutput.reset();
+                client.close();
+            }
         }
-        catch (IOException e){
+        catch (IOException | ClassNotFoundException e){
             e.printStackTrace();
         }
     }
@@ -171,12 +165,6 @@ public class LocalDijkstras {
         }
         catch(IOException | ClassNotFoundException e){
             e.printStackTrace();
-        }
-    }
-
-    public static class updateLocalMin{
-        public updateLocalMin(){
-
         }
     }
 

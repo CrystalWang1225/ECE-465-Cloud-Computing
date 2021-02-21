@@ -12,6 +12,7 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ManagerThread implements Runnable {
    private Graph graph;
@@ -22,13 +23,14 @@ public class ManagerThread implements Runnable {
    private int portNumber;
    private Node current;
    private AtomicBoolean isFinished;
+   private AtomicInteger finishedThreads;
    private List<Integer> visited;
 
    public ManagerThread(Graph graph, int startNode,
                         int endNode, CyclicBarrier cyclicBarrier,
                         PriorityBlockingQueue<GlobalMinNode> globalMinNodes,
                         int portNumber, Node current, AtomicBoolean isFinished,
-                        List<Integer> visited){
+                        AtomicInteger finishedThreads, List<Integer> visited){
        this.graph = graph;
        this.startNode = startNode;
        this.endNode = endNode;
@@ -37,6 +39,7 @@ public class ManagerThread implements Runnable {
        this.portNumber = portNumber;
        this.current = current;
        this.isFinished = isFinished;
+       this.finishedThreads = finishedThreads;
        this.visited = visited;
    }
 
@@ -53,10 +56,14 @@ public class ManagerThread implements Runnable {
            objectOutputStream.writeObject(new SetupData(graph, startNode, endNode));
            objectOutputStream.reset();
 
-           while (!isFinished.get()) {
+           while (true) {
                GlobalMinNode response = (GlobalMinNode) objectInputStream.readObject();
                if(response.getNode() >= 0 && response.getDistance()<visited.get(response.getNode())) {
+                   visited.set(response.getNode(), response.getDistance());
                    globalMinNodes.put(response);
+               }
+               else if(response.getNode() == -1){
+                   break;
                }
 
                try {
@@ -71,15 +78,24 @@ public class ManagerThread implements Runnable {
                    objectOutputStream.reset();
                }
            }
-
            objectOutputStream.writeObject(new GlobalMinNode(-1, -1));
            objectOutputStream.reset();
-
            ArrayList<Integer> fromWorker = (ArrayList<Integer>) objectInputStream.readObject();
            for (int i = startNode; i < endNode; i++){
                visited.set(i,fromWorker.get(i));
            }
-
+           boolean casFinished = false;
+           while(!casFinished){
+               casFinished = finishedThreads.compareAndSet(finishedThreads.get(),finishedThreads.get()+1);
+           }
+           while(!isFinished.get()){
+               try {
+                   cyclicBarrier.await();
+               }
+               catch(BrokenBarrierException e){
+                   e.printStackTrace();
+               }
+           }
            socket.close();
 
        } catch (IOException | InterruptedException | ClassNotFoundException e){

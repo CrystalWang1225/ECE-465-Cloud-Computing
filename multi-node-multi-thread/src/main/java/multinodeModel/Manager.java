@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import graphModel.*;
 import messages.GlobalMinNode;
@@ -14,6 +15,7 @@ public class Manager {
     private Graph graph;
     private PriorityBlockingQueue<GlobalMinNode> globalQ = new PriorityBlockingQueue<>();
     private AtomicBoolean isFinished;
+    private AtomicInteger finishedThreads;
     private Node current ;
     private List<Integer> visited = new ArrayList<Integer>();
     private List<Integer> distance = new ArrayList<Integer>();
@@ -29,10 +31,11 @@ public class Manager {
 
         List<Thread> threadList = new ArrayList<>();
         isFinished = new AtomicBoolean(false);
+        finishedThreads = new AtomicInteger(0);
         current = new Node(Integer.MIN_VALUE, Integer.MIN_VALUE);
         this.graph = graph;
 
-        MinNode minNode = new MinNode( globalQ, current, isFinished, visited);
+        MinNode minNode = new MinNode( globalQ, current, isFinished, visited, finishedThreads, numCores);
         CyclicBarrier cyclicBarrier = new CyclicBarrier(numCores, minNode);
 
         int start;
@@ -50,7 +53,7 @@ public class Manager {
             }
             //spawn thread
             Thread eachThread = new Thread(new ManagerThread(graph,start,
-            end, cyclicBarrier,globalQ, portList[i], current, isFinished, visited));
+            end, cyclicBarrier,globalQ, portList[i], current, isFinished, finishedThreads, visited));
             eachThread.start();
 
             threadList.add(eachThread);
@@ -76,31 +79,42 @@ public class Manager {
 
         private PriorityBlockingQueue<GlobalMinNode> globalMinNodes;
         private AtomicBoolean isFinished;
+        private AtomicInteger finishedThreads;
+        int numCores;
         private List<Integer> visited;
         private Node current;
         MinNode(PriorityBlockingQueue<GlobalMinNode> globalMinNodes, Node current,
-                AtomicBoolean isFinished, List<Integer> visited){
+                AtomicBoolean isFinished, List<Integer> visited, AtomicInteger finishedThreads,
+                int numCores){
             this.globalMinNodes = globalMinNodes;
             this.current = current;
             this.isFinished = isFinished;
+            this.finishedThreads = finishedThreads;
             this.visited = visited;
+            this.numCores = numCores;
         }
         @Override
         public void run(){
-            if (globalMinNodes.isEmpty()){
+            if (finishedThreads.get() == numCores){
                 isFinished.set(true);
-
-            }else {
-                GlobalMinNode newMin = globalMinNodes.poll();
-                System.out.println("New Min number: "+newMin.getNode()+" New Min distance"+newMin.getDistance());
-                while(newMin.getDistance() >= visited.get(newMin.getNode())){
-                    if(globalMinNodes.isEmpty()) break;
-                    newMin = globalMinNodes.poll();
-                }
-                if(newMin.getDistance() < visited.get(newMin.getNode())) {
-                    visited.set(newMin.getNode(), newMin.getDistance());
-                    current.setNode(newMin.getNode());
-                    current.setDistance(newMin.getDistance());
+            }
+            else {
+                if (globalMinNodes.isEmpty()) {
+                    isFinished.set(false);
+                } else {
+                    isFinished.set(false);
+                    GlobalMinNode newMin = globalMinNodes.poll();
+                    //System.out.println("New Min number: " + newMin.getNode() + " New Min distance: " + newMin.getDistance());
+                    while (newMin.getDistance() >= visited.get(newMin.getNode())) {
+                        if (globalMinNodes.isEmpty()) break;
+                        newMin = globalMinNodes.poll();
+                        //System.out.println("Redo Min number: " + newMin.getNode() + " Redo Min distance: " + newMin.getDistance());
+                    }
+                    if (newMin.getDistance() < visited.get(newMin.getNode())) {
+                        visited.set(newMin.getNode(), newMin.getDistance());
+                        current.setNode(newMin.getNode());
+                        current.setDistance(newMin.getDistance());
+                    }
                 }
             }
         }

@@ -20,8 +20,8 @@ class SubMain {
             int numThreads = Integer.parseInt(args[0]); //This should be equal to how many cores this node has
             int portNum = Integer.parseInt(args[1]);
             LocalDijkstras localRunner = new LocalDijkstras(portNum, numThreads);
-            Instant startTime = Instant.now(); //for execution time
             localRunner.setup();
+            Instant startTime = Instant.now(); //for execution time
             localRunner.runDijkstras();
             Instant finish = Instant.now();
             long timeElapsed = Duration.between(startTime, finish).toMillis();
