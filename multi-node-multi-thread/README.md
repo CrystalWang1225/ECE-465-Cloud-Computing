@@ -33,3 +33,13 @@ To run a test by creating a new graph: java -jar ./target/multi-node-multi-threa
 
 #### Time Complexity
 Previously, we improved the time complexity of the single-node algorithm to close to O(v). This multi-node algorithm has slightly faster run times, but still looks like O(v).
+
+#### Revision 2
+Revision 1 involved no sockets and no sending of data, purely shared memory. That is why it ran so fast. However, in distributed systems, nodes are completely separate and must share data via the Internet. In revision 2, we made use of Java sockets to truly implement multi-node computation. However, due to the time needed to transmit data between processes, the run time has slowed down considerably. The time complexity is still close to O(v).
+
+#### Algorithm
+The algorithm of our multi-node-multi-thread is similar to single-node, with the addition of a supervisor that is in charge of the consistent sharing of data between each node. The supervisor node, called the Manager, receives the polls from the local priority queues of the individual subordinate nodes. Each individual node runs the single-node algorithm but regularly polls the head local priority queue into the Java socket so that the Manager can sort the local minimum distance vertices from each sub-node. This creates a "global priority queue" which each sub-node regularly gets data from. Currently, our algorithm still has room for improvement in terms of work division between nodes. Each node still has large amounts of overlapping work, and our attempts to decrease the overlap have lead to inaccurate algorithm results. Additionally, there is a terrifyingly long setup time for each sub-node, since the Manager node must send an entire graph over to each sub-node. For large graphs with 1000 vertices, just sending these over at the setup of a sub-node takes up to 10 seconds. The runtimes shown below are those excluding initial setup time.
+#### Runtimes:
+10 vertices: 20 ms (4 nodes)
+100 vertices: 150 ms (4 nodes)
+1000 vertices: 1900 ms (4 nodes)

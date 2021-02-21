@@ -6,27 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="67c15954-bd21-4027-a9b6-476302d49190" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/input100.txt" beforeDir="false" afterPath="$PROJECT_DIR$/input100.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/output10.txt" beforeDir="false" afterPath="$PROJECT_DIR$/output10.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/output100.txt" beforeDir="false" afterPath="$PROJECT_DIR$/output100.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/input1000.txt" beforeDir="false" afterPath="$PROJECT_DIR$/input1000.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/output1000.txt" beforeDir="false" afterPath="$PROJECT_DIR$/output1000.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/output20.txt" beforeDir="false" afterPath="$PROJECT_DIR$/output20.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/output50.txt" beforeDir="false" afterPath="$PROJECT_DIR$/output50.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/output6.txt" beforeDir="false" afterPath="$PROJECT_DIR$/output6.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/SubMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/SubMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/multinodeModel/LocalDijkstras.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/multinodeModel/LocalDijkstras.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/multinodeModel/Manager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/multinodeModel/Manager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/multithread/LocalDijkstrasThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/multithread/LocalDijkstrasThread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/multithread/ManagerThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/multithread/ManagerThread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SubMain.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SubMain.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/multinodeModel/LocalDijkstras$updateLocalMin.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/multinodeModel/LocalDijkstras.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/multinodeModel/LocalDijkstras.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/multinodeModel/Manager$MinNode.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/multinodeModel/Manager$MinNode.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/multinodeModel/Manager.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/multinodeModel/Manager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/multithread/LocalDijkstrasThread.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/multithread/LocalDijkstrasThread.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/multithread/ManagerThread.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/multithread/ManagerThread.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/multi-node-multi-thread-0.0.1.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/multi-node-multi-thread-0.0.1.jar" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
