@@ -1,0 +1,2 @@
+curl -X DELETE https://0y6pzvqls1.execute-api.us-east-1.amazonaws.com/dev/todos/61cd0c40-a2f4-11eb-98c6-d712d57821a6
+curl -X DELETE https://0y6pzvqls1.execute-api.us-east-1.amazonaws.com/dev/todos/aaeb8510-a2ee-11eb-ad05-b7ed434c3d21
