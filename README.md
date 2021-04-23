@@ -3,7 +3,7 @@
 curl -o- -L https://slss.io/install | bash  
 sudo apt install node (or nodejs)  
 sudo apt install npm  
-npim install -g serverless  
+npm install -g serverless  
 
 ### Clone this repository onto your computer, then run:  
 npm install
