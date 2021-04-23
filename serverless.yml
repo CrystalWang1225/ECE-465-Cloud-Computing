@@ -35,6 +35,13 @@ functions:
           path: todos
           method: get
           cors: true
+          request:
+            parameters:
+              querystrings:
+                name: false
+                job: false
+                place: false
+
 
   get:
     handler: todos/get.get

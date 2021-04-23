@@ -18,17 +18,20 @@ module.exports.create = (event, context, callback) => {
     return;
   }*/
 
-
-  const params = {
+  var paramsObj = 
+  {
     TableName: process.env.DYNAMODB_TABLE,
     Item: {
       id: uuid.v1(),
-      data: data,
       checked: false,
       createdAt: timestamp,
       updatedAt: timestamp,
     },
   };
+  for(var field in data){
+    paramsObj.Item[field] = data[field];
+  }
+  var params = paramsObj;
 
   // write the todo to the database
   dynamoDb.put(params, (error) => {
