@@ -5,6 +5,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "deploy": "^1.0.3",
+    "serverless": "^2.39.0",
     "uuid": "^2.0.3"
   }
 }

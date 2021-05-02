@@ -18,6 +18,8 @@ provider:
             - dynamodb:DeleteItem
           Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
   lambdaHashingVersion: 20201221
+  httpApi:
+    cors: true
 
 functions:
   create:
@@ -27,6 +29,7 @@ functions:
           path: todos
           method: post
           cors: true
+
 
   list:
     handler: todos/list.list

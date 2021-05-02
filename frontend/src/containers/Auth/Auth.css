@@ -1,0 +1,25 @@
+.Main {
+    margin : 70px auto;
+    width : 90%;
+    padding : 15px;
+}
+
+.heading{
+    margin-bottom: 50px;
+    color : #af111c;
+}
+
+.Error{
+    color : red;
+    font-weight: bold;
+}
+
+.auth-spinner{
+    margin-top: 150px;
+}
+
+@media(min-width : 500px){
+    .Main{
+        width: 450px;
+    }
+}

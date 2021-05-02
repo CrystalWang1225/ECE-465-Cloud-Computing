@@ -1,0 +1,27 @@
+.left,.right{
+    display: none;
+}
+
+@media(min-width : 500px){
+    .Donors{
+        width : 90%;
+        margin: 10px auto;
+    }
+    .left, .right{
+        width : 29%;
+        flex: 1;
+        margin-left: 1%;
+        margin-top: 100px;
+        display: block;
+    }
+    
+    .center{
+        width : 38%;
+        flex: 2;
+        margin-left: 1%;
+        margin-right: 1%;
+    }
+    .main-container{
+        display: flex;
+    }
+}

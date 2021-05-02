@@ -1,0 +1,44 @@
+.main {
+    margin-top : 70px;
+    width : 100%;
+    padding : 15px;
+}
+
+.Error{
+    color : red;
+    font-weight: bold;
+}
+
+.content-container{
+    display: flex;
+}
+
+@media(min-width : 500px){
+    .register-form{
+        flex: 3;
+        margin-right: 2%;    }
+    .requests{
+        flex: 2;
+        margin: 0 2%;
+    }
+    .notifications{
+        flex: 2;
+        margin-right: 2%;
+    }
+}
+
+@media(max-width: 499px) {
+    .content-container { 
+        flex-flow: column; 
+    }
+    .register-form{
+        order: 1;
+    }
+    .requests{
+        margin : 50px 0px;
+        order: 2;
+    }
+    .notifications{
+        order: 3;
+    }
+}
