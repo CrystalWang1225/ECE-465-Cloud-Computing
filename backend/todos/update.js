@@ -7,34 +7,41 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 module.exports.update = (event, context, callback) => {
   const timestamp = new Date().getTime();
   const data = JSON.parse(event.body);
-
-  // validation
-  if (typeof data.text !== 'string' || typeof data.checked !== 'boolean') {
-    console.error('Validation Failed');
-    callback(null, {
-      statusCode: 400,
-      headers: { 'Content-Type': 'text/plain' },
-      body: 'Couldn\'t update the todo item.',
-    });
-    return;
-  }
-
+  var itemidvar = event.pathParameters.id;
+  var itemtype = String(event.queryStringParameters.type);
   const params = {
-    TableName: process.env.DYNAMODB_TABLE,
     Key: {
-      id: event.pathParameters.id,
+      id: itemidvar,
     },
-    ExpressionAttributeNames: {
-      '#todo_text': 'text',
-    },
-    ExpressionAttributeValues: {
-      ':text': data.text,
-      ':checked': data.checked,
-      ':updatedAt': timestamp,
-    },
-    UpdateExpression: 'SET #todo_text = :text, checked = :checked, updatedAt = :updatedAt',
     ReturnValues: 'ALL_NEW',
   };
+  var params = {};
+  params["TableName"] = "";
+  params["ExpressionAttributeNames"] = {};
+  params["ExpressionAttributeValues"] = {};
+  if(itemtype == "user"){
+    params["TableName"] = process.env.USER_TABLE;
+  }
+  else if(itemtype == "blood"){
+    params["TableName"] = process.env.BLOOD_TABLE;
+  }
+  else if(itemtype == "appointment"){
+    params["TableName"] = process.env.APPOINTMENT_TABLE;
+  }
+  var isFirstField = true;
+  for(var field in data){
+    if(isFirstField){
+      params["UpdateExpression"] = "SET #item_" + String(field) + " = :this_" + String(field);
+      params["ExpressionAttributeValues"][":this_" + String(field)] = String(data[field]);
+      params["ExpressionAttributeNames"]["#item_" + String(field)] = String(field);
+      isFirstParam = false;
+    }
+    else{
+      params["UpdateExpression"] += ", #item_" + String(field) + " = :this_" + String(field);
+      params["ExpressionAttributeValues"][":this_" + String(field)] = String(data[field]);
+      params["ExpressionAttributeNames"]["#item_" + String(field)] = String(field);
+    }
+  }
 
   // update the todo in the database
   dynamoDb.update(params, (error, result) => {

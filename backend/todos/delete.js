@@ -5,10 +5,22 @@ const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-depe
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports.delete = (event, context, callback) => {
-  const params = {
-    TableName: process.env.DYNAMODB_TABLE,
+  var itemidvar = event.pathParameters.id;
+  var itemtype = String(event.queryStringParameters.type);
+  var tableNameVar;
+  if(itemtype == "user"){
+    tableNameVar = process.env.USER_TABLE;
+  }
+  else if(itemtype == "blood"){
+    tableNameVar = process.env.BLOOD_TABLE;
+  }
+  else if(itemtype == "appointment"){
+    tableNameVar = process.env.APPOINTMENT_TABLE;
+  }
+  var params = {
+    TableName: tableNameVar,
     Key: {
-      id: event.pathParameters.id,
+      id: itemidvar,
     },
   };
 
@@ -20,7 +32,7 @@ module.exports.delete = (event, context, callback) => {
       callback(null, {
         statusCode: error.statusCode || 501,
         headers: { 'Content-Type': 'text/plain' },
-        body: 'Couldn\'t remove the todo item.',
+        body: 'Couldn\'t create the todo item.',
       });
       return;
     }
@@ -28,7 +40,7 @@ module.exports.delete = (event, context, callback) => {
     // create a response
     const response = {
       statusCode: 200,
-      body: JSON.stringify({}),
+      body: itemidvar,
     };
     callback(null, response);
   });

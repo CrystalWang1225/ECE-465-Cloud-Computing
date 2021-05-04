@@ -1,10 +1,13 @@
-service: aws-node-rest-api-with-dynamodb
+service: ece465-final-bloodbank
 
 provider:
   name: aws
   runtime: nodejs10.x
+  region: us-east-1
   environment:
-    DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    USER_TABLE: ${self:service}-userTable
+    BLOOD_TABLE: ${self:service}-bloodTable
+    APPOINTMENT_TABLE: ${self:service}-appointmentTable
   iam:
     role:
       statements:
@@ -16,7 +19,10 @@ provider:
             - dynamodb:PutItem
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
-          Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+          Resource:
+            - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.USER_TABLE}"
+            - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.BLOOD_TABLE}"
+            - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.APPOINTMENT_TABLE}"
   lambdaHashingVersion: 20201221
   httpApi:
     cors: true
@@ -29,6 +35,10 @@ functions:
           path: todos
           method: post
           cors: true
+          request:
+            parameters:
+              querystrings:
+                type: true
 
 
   list:
@@ -41,6 +51,7 @@ functions:
           request:
             parameters:
               querystrings:
+                type: true
                 name: false
                 job: false
                 place: false
@@ -61,6 +72,10 @@ functions:
           path: todos/{id}
           method: put
           cors: true
+          request:
+            parameters:
+              querystrings:
+                type: true
 
   delete:
     handler: todos/delete.delete
@@ -69,12 +84,16 @@ functions:
           path: todos/{id}
           method: delete
           cors: true
+          request:
+            parameters:
+              querystrings:
+                type: true
 
 resources:
   Resources:
-    TodosDynamoDbTable:
+    usersTable:
       Type: 'AWS::DynamoDB::Table'
-      DeletionPolicy: Retain
+      DeletionPolicy: Delete
       Properties:
         AttributeDefinitions:
           -
@@ -87,4 +106,37 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+        TableName: ${self:provider.environment.USER_TABLE}
+    bloodTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Delete
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.BLOOD_TABLE}
+    appointmentTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Delete
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.APPOINTMENT_TABLE}
+    

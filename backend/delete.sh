@@ -1,2 +1,9 @@
-curl -X DELETE https://0y6pzvqls1.execute-api.us-east-1.amazonaws.com/dev/todos/61cd0c40-a2f4-11eb-98c6-d712d57821a6
-curl -X DELETE https://0y6pzvqls1.execute-api.us-east-1.amazonaws.com/dev/todos/aaeb8510-a2ee-11eb-ad05-b7ed434c3d21
+#!/usr/bin/env bash
+PROFILE="default"
+REGION=$(aws configure get region)
+PREAMBLE="--profile ${PROFILE} --region ${REGION}"
+TYPE=$1
+ITEM_ID=91c5f250-ac67-11eb-bdb6-bd8b2fd85a68
+RESTAPI_ID=$(aws apigateway get-rest-apis ${PREAMBLE} | jq '.items | .[] | select(.name == "dev-ece465-final-bloodbank") | .id' | tr -d '"')
+STAGE_NAME=$(aws apigateway get-stages ${PREAMBLE} --rest-api-id ${RESTAPI_ID} | jq '.item | .[0] | .stageName' | tr -d '"')
+curl -X DELETE https://${RESTAPI_ID}.execute-api.${REGION}.amazonaws.com/${STAGE_NAME}/todos/${ITEM_ID}?type=${TYPE}

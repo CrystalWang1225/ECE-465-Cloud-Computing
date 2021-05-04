@@ -6,7 +6,7 @@ sudo apt install npm
 npm install -g serverless  
 
 ### Clone this repository onto your computer, then run:  
-npm install
+npm install  
 serverless deploy
 
 ### Example use  

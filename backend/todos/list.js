@@ -5,13 +5,25 @@ const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-depe
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports.list = (event, context, callback) => {
+  var itemtype = String(event.queryStringParameters.type);
+  var tableNameVar;
+  if(itemtype == "user"){
+    tableNameVar = process.env.USER_TABLE;
+  }
+  else if(itemtype == "blood"){
+    tableNameVar = process.env.BLOOD_TABLE;
+  }
+  else if(itemtype == "appointment"){
+    tableNameVar = process.env.APPOINTMENT_TABLE;
+  }
+  console.log(itemtype);
+  console.log(tableNameVar);
   var params = {
-    TableName: process.env.DYNAMODB_TABLE,
+    TableName: tableNameVar,
   };
   var isFirstParam = true;
   for(var qsp in event.queryStringParameters){
-    if(event.queryStringParameters[qsp]){
-      console.log(event.queryStringParameters[qsp]);
+    if(event.queryStringParameters[qsp] && String(event.queryStringParameters[qsp]) != "user"){
       if(isFirstParam){
         params["FilterExpression"] = "#item_" + String(qsp) + " = :this_" + String(qsp);
         params["ExpressionAttributeValues"]={};

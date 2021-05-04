@@ -8,26 +8,29 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 module.exports.create = (event, context, callback) => {
   const timestamp = new Date().getTime();
   const data = JSON.parse(event.body);
-  /*if (typeof data.text !== 'string') {
-    console.error('Validation Failed');
-    callback(null, {
-      statusCode: 400,
-      headers: { 'Content-Type': 'text/plain' },
-      body: 'Couldn\'t create the todo item.',
-    });
-    return;
-  }*/
-
+  var itemtype = String(event.queryStringParameters.type);
+  var tableNameVar;
+  if(itemtype == "user"){
+    tableNameVar = process.env.USER_TABLE;
+  }
+  else if(itemtype == "blood"){
+    tableNameVar = process.env.BLOOD_TABLE;
+  }
+  else if(itemtype == "appointment"){
+    tableNameVar = process.env.APPOINTMENT_TABLE;
+  }
+  
   var paramsObj = 
   {
-    TableName: process.env.DYNAMODB_TABLE,
+    TableName: tableNameVar,
     Item: {
       id: uuid.v1(),
-      checked: false,
       createdAt: timestamp,
       updatedAt: timestamp,
     },
   };
+  //Set which table to create item in
+  //Set item fields
   for(var field in data){
     paramsObj.Item[field] = data[field];
   }
