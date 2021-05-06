@@ -15,7 +15,6 @@ module.exports.update = (event, context, callback) => {
     },
     ReturnValues: 'ALL_NEW',
   };
-  var params = {};
   params["TableName"] = "";
   params["ExpressionAttributeNames"] = {};
   params["ExpressionAttributeValues"] = {};
@@ -34,7 +33,7 @@ module.exports.update = (event, context, callback) => {
       params["UpdateExpression"] = "SET #item_" + String(field) + " = :this_" + String(field);
       params["ExpressionAttributeValues"][":this_" + String(field)] = String(data[field]);
       params["ExpressionAttributeNames"]["#item_" + String(field)] = String(field);
-      isFirstParam = false;
+      isFirstField = false;
     }
     else{
       params["UpdateExpression"] += ", #item_" + String(field) + " = :this_" + String(field);

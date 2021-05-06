@@ -8,6 +8,8 @@ provider:
     USER_TABLE: ${self:service}-userTable
     BLOOD_TABLE: ${self:service}-bloodTable
     APPOINTMENT_TABLE: ${self:service}-appointmentTable
+    APP_SECRET: qZVUS7jsA33pnM6Vi8KG
+    APP_BASE_URL: "http://localhost:3000"
   iam:
     role:
       statements:

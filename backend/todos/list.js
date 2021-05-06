@@ -6,21 +6,16 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports.list = (event, context, callback) => {
   var itemtype = String(event.queryStringParameters.type);
-  var tableNameVar;
+  var params = {};
   if(itemtype == "user"){
-    tableNameVar = process.env.USER_TABLE;
+    params["TableName"] = process.env.USER_TABLE;
   }
   else if(itemtype == "blood"){
-    tableNameVar = process.env.BLOOD_TABLE;
+    params["TableName"] = process.env.BLOOD_TABLE;
   }
   else if(itemtype == "appointment"){
-    tableNameVar = process.env.APPOINTMENT_TABLE;
+    params["TableName"] = process.env.APPOINTMENT_TABLE;
   }
-  console.log(itemtype);
-  console.log(tableNameVar);
-  var params = {
-    TableName: tableNameVar,
-  };
   var isFirstParam = true;
   for(var qsp in event.queryStringParameters){
     if(event.queryStringParameters[qsp] && String(event.queryStringParameters[qsp]) != "user"){
