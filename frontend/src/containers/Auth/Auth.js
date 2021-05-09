@@ -12,7 +12,7 @@ import './Auth.css';
 import Button from '@material-ui/core/Button';
 import { withStyles } from "@material-ui/core/styles";
 // Material UI Imports end
-let API_URL = "https://le300s0b39.execute-api.us-east-1.amazonaws.com"
+let API_URL = "https://w861bpjimd.execute-api.us-east-1.amazonaws.com"
 const styles = theme => {
     return {
         TextFields : {
@@ -94,7 +94,11 @@ class Auth extends Component{
             });
         }
         else{
-            fetch(API_URL+'/dev/user/kevinjiang99/abcdef',{
+            let email = this.state.email
+            let password = this.state.pass
+            console.log(email)
+            console.log(password)
+            fetch(API_URL+'/dev/user/' + email + '/' + password,{
                 method:'GET',
                 mode: 'cors',
                 headers: {

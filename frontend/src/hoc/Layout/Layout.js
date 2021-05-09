@@ -10,6 +10,7 @@ import Auth from "../../containers/Auth/Auth";
 import Profile from "../../containers/Profile/Profile";
 import Donors from "../../containers/Donors/Donors";
 import Logout from "../../containers/Auth/Logout/Logout";
+import Account from "../../containers/Account/Account"
 
 class Layout extends Component {
   render() {
@@ -26,6 +27,7 @@ class Layout extends Component {
           <Route path="/profile" component={Profile} />
           <Route path="/auth" component={Auth} />
           <Route path="/donors" component={Donors} />
+          <Route path="/account" component={Account} />
           <Route path="/logout" component={Logout} />
           <Route path="/" exact component={Auth} />
         </Switch>
