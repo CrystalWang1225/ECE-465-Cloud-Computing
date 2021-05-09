@@ -8,16 +8,16 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 module.exports.signup = (event, context, callback) => {
   var timeStamp = new Date().getTime();
   var userData = JSON.parse(event.body);
-  var userName = userData.username;
+  var userEmail = userData.email;
   var userPass = userData.password;
   const params = {
     TableName: process.env.USER_TABLE,
-    FilterExpression: "#user_name = :this_name",
+    FilterExpression: "#user_email = :this_email",
     ExpressionAttributeNames: {
-      "#user_name": "username",
+      "#user_email": "email",
     },
     ExpressionAttributeValues: {
-      ":this_name": userName,
+      ":this_email": userEmail,
     }
   };
   // fetch todo from the database
@@ -38,7 +38,7 @@ module.exports.signup = (event, context, callback) => {
       return;
     }
     if(result.Items.length == 0){
-        console.log("No user with existing name, OK");
+        console.log("No existing user with this email, OK");
         var createParams = {
             TableName: process.env.USER_TABLE,
             Item: {
@@ -70,7 +70,7 @@ module.exports.signup = (event, context, callback) => {
         });
     }
     else{
-        console.log("User name already exists");
+        console.log("Email already used");
         callback(null, {
             statusCode:event.statusCode,
             headers: { 
@@ -78,7 +78,7 @@ module.exports.signup = (event, context, callback) => {
               "Access-Control-Allow-Origin": "*",
               "Access-Control-Allow-Methods": "OPTIONS, POST, GET"
              },
-            body: JSON.stringify({"message": "This user name has already been taken",})
+            body: JSON.stringify({"message": "This email has already been taken",})
           });
           return;
     }

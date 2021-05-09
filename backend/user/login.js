@@ -5,18 +5,18 @@ const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-depe
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports.login = (event, context, callback) => {
-  var userName = String(event.pathParameters.username);
+  var userEmail = String(event.pathParameters.email);
   var userPass = String(event.pathParameters.password);
-  console.log(userName);
+  console.log(userEmail);
   console.log(userPass);
   const params = {
     TableName: process.env.USER_TABLE,
-    FilterExpression: "#user_name = :this_name",
+    FilterExpression: "#user_email = :this_email",
     ExpressionAttributeNames: {
-      "#user_name": "username",
+      "#user_email": "email",
     },
     ExpressionAttributeValues: {
-      ":this_name": userName,
+      ":this_email": userEmail,
     }
   };
   // fetch todo from the database
@@ -36,14 +36,14 @@ module.exports.login = (event, context, callback) => {
     }
 
     if(result.Items.length == 0){
-      console.log("No user with such username");
+      console.log("No user with such email");
       callback(null, {
         statusCode: error.statusCode,
         headers: {
         "Access-Control-Allow-Headers" : "Content-Type",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "OPTIONS, POST, GET" },
-        body: JSON.stringify({"message": "No user with such username"}),
+        body: JSON.stringify({"message": "No user with such email"}),
       });
       return;
     }

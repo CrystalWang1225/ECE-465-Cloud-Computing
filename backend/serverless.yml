@@ -41,13 +41,13 @@ functions:
     handler: user/login.login
     events:
       - http:
-          path: user/{username}/{password}
+          path: user/{email}/{password}
           method: get
           cors: true
           request:
             parameters:
               paths:
-                username: true
+                email: true
                 password: true
 
   create:
