@@ -26,8 +26,11 @@ module.exports.login = (event, context, callback) => {
       console.error(error);
       callback(null, {
         statusCode: error.statusCode || 501,
-        headers: { 'Content-Type': 'text/plain' },
-        body: "Error occured with scan",
+        headers: {
+        "Access-Control-Allow-Headers" : "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS, POST, GET" },
+        body: JSON.stringify({"message": "Error occured with scan"}),
       });
       return;
     }
@@ -35,9 +38,12 @@ module.exports.login = (event, context, callback) => {
     if(result.Items.length == 0){
       console.log("No user with such username");
       callback(null, {
-        statusCode: 200,
-        headers: { 'Content-Type': 'text/plain' },
-        body: "No user with such username",
+        statusCode: error.statusCode,
+        headers: {
+        "Access-Control-Allow-Headers" : "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS, POST, GET" },
+        body: JSON.stringify({"message": "No user with such username"}),
       });
       return;
     }
@@ -51,7 +57,7 @@ module.exports.login = (event, context, callback) => {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "OPTIONS, POST, GET"
         },
-        body: JSON.stringify({"message": "Login Successful", "token": dbUserEntry.id}),
+        body: JSON.stringify({"message": "Login Successful", "id": dbUserEntry.id, "statusCode": 200}),
       };
       callback(null, response);
     }
@@ -59,12 +65,11 @@ module.exports.login = (event, context, callback) => {
       const response = {
         statusCode: 500,
         headers: {
-          'Content-Type': 'text/plain',
           "Access-Control-Allow-Headers" : "Content-Type",
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "OPTIONS, POST, GET"
         },
-        body: "Wrong Password",
+        body: JSON.stringify({"message": "Wrong Password"}),
       };
       callback(null, response);
     }

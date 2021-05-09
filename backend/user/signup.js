@@ -24,12 +24,16 @@ module.exports.signup = (event, context, callback) => {
   dynamoDb.scan(params, (error, result) => {
     // handle potential errors
     var registerSuccess = false;
+    var registeredID = uuid.v1();
     if (error) {
       console.error(error);
       callback(null, {
         statusCode: error.statusCode || 501,
-        headers: { 'Content-Type': 'text/plain' },
-        body: "Error occured with scan",
+        headers: {         
+        "Access-Control-Allow-Headers" : "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS, POST, GET" },
+        body: JSON.stringify({"message": "Error occured with scan"}),
       });
       return;
     }
@@ -38,7 +42,7 @@ module.exports.signup = (event, context, callback) => {
         var createParams = {
             TableName: process.env.USER_TABLE,
             Item: {
-                id: uuid.v1(),
+                id: registeredID,
                 createdAt: timeStamp,
                 updatedAt: timeStamp,
             }
@@ -52,8 +56,12 @@ module.exports.signup = (event, context, callback) => {
               console.error(error);
               callback(null, {
                 statusCode: error.statusCode || 501,
-                headers: { 'Content-Type': 'text/plain' },
-                body: 'Couldn\'t create account.',
+                headers: { 
+                  "Access-Control-Allow-Headers" : "Content-Type",
+                  "Access-Control-Allow-Origin": "*",
+                  "Access-Control-Allow-Methods": "OPTIONS, POST, GET"
+                 },
+                body: JSON.stringify({"message": 'Couldn\'t create account.'}),
               });
               return;
             }
@@ -64,9 +72,13 @@ module.exports.signup = (event, context, callback) => {
     else{
         console.log("User name already exists");
         callback(null, {
-            statusCode: 200,
-            headers: { 'Content-Type': 'text/plain' },
-            body: "This user name has already been taken",
+            statusCode:event.statusCode,
+            headers: { 
+              "Access-Control-Allow-Headers" : "Content-Type",
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "OPTIONS, POST, GET"
+             },
+            body: JSON.stringify({"message": "This user name has already been taken",})
           });
           return;
     }
@@ -79,7 +91,11 @@ module.exports.signup = (event, context, callback) => {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "OPTIONS, POST, GET"
       },
-      body: "Register success\n",
+      body: JSON.stringify({
+        "statusCode": 200,
+        "message": "Register success",
+        "id": registeredID
+      }),
     };
     callback(null, response);
   });

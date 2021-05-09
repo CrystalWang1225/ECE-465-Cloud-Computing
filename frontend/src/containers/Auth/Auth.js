@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import firebase from "firebase/app"
 import "firebase/auth"
 import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import { connect } from 'react-redux';
@@ -13,7 +12,7 @@ import './Auth.css';
 import Button from '@material-ui/core/Button';
 import { withStyles } from "@material-ui/core/styles";
 // Material UI Imports end
-let API_URL = "https://rvlko3zwhc.execute-api.us-east-1.amazonaws.com"
+let API_URL = "https://le300s0b39.execute-api.us-east-1.amazonaws.com"
 const styles = theme => {
     return {
         TextFields : {
@@ -53,16 +52,10 @@ class Auth extends Component{
     }
     
     handleSubmit = () => {
-        let opt = {
-            "name": "Crystal", 
-            "place": "CA", 
-            "job": "Software Engineer"
-        }
-        console.log(opt)
+        const opt = {"email" : this.state.email,"password":this.state.pass}
         this.setState({loading : true});
         if(this.props.isSignup){
-            console.log("hi")
-            fetch(API_URL+'/dev/todos',{
+            fetch(API_URL+'/dev/user',{
                 method:'POST',
                 mode: 'cors',
                 headers: {
@@ -73,61 +66,67 @@ class Auth extends Component{
                     "Origin" : "http://localhost:3000",
 
                 },
-            body: JSON.stringify(opt)
+                body: JSON.stringify(opt)
         }).then(response => response.json())
             .then((json) => {
-                console.log("hi")
-                console.log(json);
+                if (json.statusCode === 200){
+                const uid = json.id;
+                console.log("Successfully signed up!")
+                this.setState({loading : false});
+                this.props.onLogin(uid);
+                this.props.history.replace("/donors");
+                }
+                else {
+                    console.log("Error here")
+                    console.log(json.message)
+                    this.setState({loading : false});
+                    let errorMessage = ''; 
+                    errorMessage = json.message;
+                    this.setState({error : errorMessage})
+                }
             })
-            // .then(
-            //     data => {
-            //     const uid = response.user.uid;
-            //     this.setState({loading : false});
-            //     this.props.onLogin(uid);
-            //     this.props.history.replace("/donors");
-            //     console.log(response);
-            //     console.log(data);
-            // }
-            // )
             .catch(error => {
                 this.setState({loading : false});
-                let errorMessage = '';
-                if(error.code === 'auth/email-already-in-use')
-                    errorMessage = "Account For This Email is Already Registered"
-                else if(error.code === 'auth/invalid-email')
-                    errorMessage = "Invalid Email"
-                else     
-                    errorMessage = error.message;
+                let errorMessage = '';  
+                 errorMessage = error.message;
+                console.log(errorMessage)
                 this.setState({error : errorMessage})
             });
         }
         else{
-            firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.pass)
-            .then(res =>{
-                const uid = res.user.uid;
-                firebase.database().ref(`donors/${uid}`).once('value')
-                    .then(res => {
-                        this.props.onLogin(uid);
-                        if(res.val()){
-                            this.props.onSetRegistered();
-                            this.props.onSetRequestedDonors(uid);
-                        }
+            fetch(API_URL+'/dev/user/kevinjiang99/abcdef',{
+                method:'GET',
+                mode: 'cors',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    "Access-Control-Request-Method": "GET",
+                    "Access-Control-Request-Headers": "Content-Type",
+                    "Origin" : "http://localhost:3000",
 
-                        this.props.history.replace("/donors");
-                    })
-                    .catch(err => {
-                        this.setState({error :err, loading : false})
-                    })
-            })    
+                }
+        }).then(response => response.json())
+            .then((json) => {
+                const uid = json.id;
+                if (json.statusCode === 200){
+                    this.setState({loading : false});
+                    this.props.onLogin(uid);
+                    this.props.history.replace("/donors");
+                }
+                else {
+                    console.log("Error here")
+                    console.log(json.message)
+                    this.setState({loading : false});
+                    let errorMessage = ''; 
+                    errorMessage = json.message;
+                    this.setState({error : errorMessage})
+                }
+
+            })  
             .catch(error =>{
                 this.setState({loading : false});
                 let errorMessage = ''
-                if(error.code === 'auth/wrong-password')
-                    errorMessage = "Wrong Password";
-                else if(error.code === 'auth/user-not-found')  
-                    errorMessage = "User Doesn't Exist";  
-                else     
-                    errorMessage = error.message;                    
+                errorMessage = error.message;                    
                 this.setState({error : errorMessage})
             });
         }
