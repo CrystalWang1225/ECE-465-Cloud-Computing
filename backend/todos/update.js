@@ -41,6 +41,8 @@ module.exports.update = (event, context, callback) => {
       params["ExpressionAttributeNames"]["#item_" + String(field)] = String(field);
     }
   }
+  params["UpdateExpression"] += ", updatedAt = :this_updatedAt";
+  params["ExpressionAttributeValues"][":this_updatedAt"] = timestamp;
 
   // update the todo in the database
   dynamoDb.update(params, (error, result) => {

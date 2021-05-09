@@ -30,6 +30,26 @@ provider:
     cors: true
 
 functions:
+  signup:
+    handler: user/signup.signup
+    events:
+      - http:
+          path: user
+          method: post
+          cors: true
+  login:
+    handler: user/login.login
+    events:
+      - http:
+          path: user/{username}/{password}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                username: true
+                password: true
+
   create:
     handler: todos/create.create
     events:
