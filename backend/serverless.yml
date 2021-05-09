@@ -49,6 +49,13 @@ functions:
               paths:
                 email: true
                 password: true
+  updateUser:
+    handler: user/updateUser.updateUser
+    events:
+      - http:
+          path: user
+          method: put
+          cors: true
 
   create:
     handler: todos/create.create
