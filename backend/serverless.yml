@@ -56,6 +56,24 @@ functions:
           path: user
           method: put
           cors: true
+  userList:
+    handler: user/userList.userList
+    events:
+      - http:
+          path: user/list/
+          method: get
+          cors: true
+  userGetBlood:
+    handler: user/userGetBlood.userGetBlood
+    events:
+      - http:
+          path: user/getBlood/{id}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                id: true
 
   create:
     handler: todos/create.create

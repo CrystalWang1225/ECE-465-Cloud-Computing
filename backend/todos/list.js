@@ -6,6 +6,7 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports.list = (event, context, callback) => {
   var itemtype = String(event.queryStringParameters.type);
+  console.log(event.headers);
   var params = {};
   if(itemtype == "user"){
     params["TableName"] = process.env.USER_TABLE;
