@@ -7,7 +7,8 @@ provider:
   environment:
     USER_TABLE: ${self:service}-userTable
     BLOOD_TABLE: ${self:service}-bloodTable
-    APPOINTMENT_TABLE: ${self:service}-appointmentTable
+    DONATION_TABLE: ${self:service}-donationTable
+    HOSPITAL_TABLE: ${self:service}-hospitalTable
     APP_SECRET: qZVUS7jsA33pnM6Vi8KG
     APP_BASE_URL: "http://localhost:3000"
   iam:
@@ -24,7 +25,8 @@ provider:
           Resource:
             - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.USER_TABLE}"
             - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.BLOOD_TABLE}"
-            - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.APPOINTMENT_TABLE}"
+            - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DONATION_TABLE}"
+            - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.HOSPITAL_TABLE}"
   lambdaHashingVersion: 20201221
   httpApi:
     cors: true
@@ -64,16 +66,31 @@ functions:
           method: get
           cors: true
   userGetBlood:
-    handler: user/userGetBlood.userGetBlood
+    handler: user/userReqBlood.userReqBlood
     events:
       - http:
-          path: user/getBlood/{id}
+          path: user/ReqBlood
+          method: put
+          cors: true
+  donate:
+    handler: user/donate.donate
+    events:
+      - http:
+          path: user/donate
+          method: post
+          cors: true
+  donationList:
+    handler: user/donationList.donationList
+    events:
+      - http:
+          path: user/donate/{bloodGroup}
           method: get
           cors: true
           request:
             parameters:
               paths:
-                id: true
+                bloodGroup: true
+
 
   create:
     handler: todos/create.create
@@ -170,7 +187,7 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:provider.environment.BLOOD_TABLE}
-    appointmentTable:
+    donationTable:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Delete
       Properties:
@@ -185,5 +202,21 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: ${self:provider.environment.APPOINTMENT_TABLE}
+        TableName: ${self:provider.environment.DONATION_TABLE}
+    hospitalTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Delete
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.HOSPITAL_TABLE}
     
