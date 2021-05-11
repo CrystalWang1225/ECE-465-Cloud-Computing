@@ -5,7 +5,8 @@ const initialState = {
     isSignup : true,
     uid : '',
     isDonor : false,
-    requestedDonors : []
+    requestedDonors : [],
+    isHospital: false
 }
 
 const reducer = (state = initialState, action) => {
@@ -26,6 +27,12 @@ const reducer = (state = initialState, action) => {
                 isAuth : true,
                 uid : action.uid
             }
+        case actionTypes.SET_HOSPITAL : 
+            return{
+                ...state,
+                isAuth : true,
+                isHospital : action.isHospital
+            }
         case actionTypes.LOGOUT:
             return{
                 ...state,
@@ -33,7 +40,8 @@ const reducer = (state = initialState, action) => {
                 isSignup : true,
                 uid : '',
                 isDonor : false,
-                requestedDonors : []
+                requestedDonors : [],
+                isHospital: false
             }
         case actionTypes.REGISTERED_DONOR:
             return{

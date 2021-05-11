@@ -1,5 +1,9 @@
+.left,.right{
+    display: none;
+}
+
 @media(min-width : 500px){
-    .Reserves{
+    .Donors{
         width : 90%;
         margin: 10px auto;
     }

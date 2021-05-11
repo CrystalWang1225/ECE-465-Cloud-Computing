@@ -25,7 +25,7 @@ const styles = theme => {
             width : "95%"
         }, 
         formControl: {
-            width: "95%",
+            width: "80%",
         },
         LastTextField : {
             marginBottom : "10px",
@@ -125,8 +125,8 @@ class RegisterDonor extends Component {
                     onChange={this.props.handleChange}
                     name="phone"
                     value={this.props.phone}
-                    validators={['required','matchRegexp:^[0-9]*$','isElevenDigits']}
-                    errorMessages={['This field is required', 'Invalid Phone Number','Phone Number must have 11 digits']}/><br/>
+                    validators={['required','matchRegexp:^[0-9]*$','isTenDigits']}
+                    errorMessages={['This field is required', 'Invalid Phone Number','Phone Number must have 10 digits']}/><br/>
     
                 <TextValidator
                     className = {this.props.classes.TextFields}
@@ -137,13 +137,13 @@ class RegisterDonor extends Component {
                     validators={['required','isSmallEnough']}
                     errorMessages={['This field is required', 'Maximum 255 Characters are allowed']}/><br/>
                 
-                <FormControlLabel
+                {/* <FormControlLabel
                     control={<Switch
                                 checked={this.props.available}
                                 onChange={this.props.switchAvailability('available')}
                                 value="available"/>}
                     label="Available"
-                    labelPlacement = "start"/><br/>
+                    labelPlacement = "start"/><br/> */}
     
                 <Button 
                     variant="contained" 
