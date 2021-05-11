@@ -16,7 +16,7 @@ module.exports.donate = (event, context, callback) => {
       id: uuid.v1(),
       donorName: donationData.donorName,
       donorAge: donationData.donorAge,
-      userID: donationData.userID,
+      donorID: donationData.donorID,
       hospitalName: donationData.hospitalName,
       hospitalID: donationData.hospitalID,
       area: donationData.area,

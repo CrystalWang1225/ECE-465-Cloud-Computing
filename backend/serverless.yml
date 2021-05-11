@@ -101,6 +101,18 @@ functions:
             parameters:
               paths:
                 id: true
+  userDonations:
+    handler: user/userDonations.userDonations
+    events:
+      - http:
+          path: user/donationlist/{id}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                id: true
+
 
 
 
