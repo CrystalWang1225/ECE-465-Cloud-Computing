@@ -90,6 +90,18 @@ functions:
             parameters:
               paths:
                 bloodGroup: true
+  userReqList:
+    handler: user/userReqList.userReqList
+    events:
+      - http:
+          path: user/reqlist/{id}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                id: true
+
 
 
   create:
