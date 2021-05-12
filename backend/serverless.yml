@@ -115,7 +115,7 @@ functions:
               paths:
                 id: true
   hospitalBlood:
-    handler: user/hospitalBlood.hospitalBlood
+    handler: hospital/hospitalBlood.hospitalBlood
     events:
       - http:
           path: hospital/blood/{id}
@@ -150,8 +150,13 @@ functions:
             parameters:
               paths:
                 id: true
-
-
+  hospitalSeeReqs:
+    handler: hospital/hospitalSeeReqs.hospitalSeeReqs
+    events:
+      - http:
+          path: hospital/seerequests/
+          method: get
+          cors: true
 
   create:
     handler: todos/create.create

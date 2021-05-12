@@ -73,7 +73,7 @@ module.exports.signup = (event, context, callback) => {
     else{
         console.log("Email already used");
         callback(null, {
-            statusCode:event.statusCode,
+            statusCode: event.statusCode,
             headers: { 
               "Access-Control-Allow-Headers" : "Content-Type",
               "Access-Control-Allow-Origin": "*",
