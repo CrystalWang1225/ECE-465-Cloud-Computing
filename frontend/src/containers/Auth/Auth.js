@@ -11,6 +11,12 @@ import './Auth.css';
 // Material UI Imports start
 import Button from '@material-ui/core/Button';
 import { withStyles } from "@material-ui/core/styles";
+import FormControl from '@material-ui/core/FormControl';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControlLabel from '../../components/UI/Forms/FormControlLabel/FormControlLabel';
+
 // Material UI Imports end
 let API_URL = "https://w861bpjimd.execute-api.us-east-1.amazonaws.com"
 const styles = theme => {
@@ -31,11 +37,16 @@ const styles = theme => {
 }
 
 class Auth extends Component{
-    state = {
-        email: '',
-        pass : '',
-        error : '',
-        loading : false
+    constructor(props){
+        super(props);
+        this.state = {
+            email: '',
+            pass : '',
+            error : '',
+            loading : false,
+            isHospital: false,
+            user: ''
+        }
     }
 
     componentDidMount() {
@@ -48,11 +59,20 @@ class Auth extends Component{
     }
  
     handleChange = (event) => {
+ 
         this.setState({ [event.target.name] : event.target.value });
+    
     }
+
+
     
     handleSubmit = () => {
-        const opt = {"email" : this.state.email,"password":this.state.pass}
+        if (this.state.user === "I"){
+            this.setState({isHospital : false});
+        } else {
+            this.setState({isHospital: true})
+        }
+        const opt = {"email" : this.state.email,"password":this.state.pass,"isHospital": this.state.isHospital}
         this.setState({loading : true});
         if(this.props.isSignup){
             fetch(API_URL+'/dev/user',{
@@ -64,7 +84,6 @@ class Auth extends Component{
                     "Access-Control-Request-Method": "POST",
                     "Access-Control-Request-Headers": "Content-Type",
                     "Origin" : "http://localhost:3000",
-
                 },
                 body: JSON.stringify(opt)
         }).then(response => response.json())
@@ -74,7 +93,9 @@ class Auth extends Component{
                 console.log("Successfully signed up!")
                 this.setState({loading : false});
                 this.props.onLogin(uid);
-                this.props.history.replace("/donors");
+                const isHospital = this.state.isHospital
+                this.props.onSetHospital(isHospital);
+                this.props.history.replace("/available");
                 }
                 else {
                     console.log("Error here")
@@ -94,6 +115,7 @@ class Auth extends Component{
             });
         }
         else{
+            //TODO: send ishospital back to me 
             let email = this.state.email
             let password = this.state.pass
             console.log(email)
@@ -111,11 +133,12 @@ class Auth extends Component{
                 }
         }).then(response => response.json())
             .then((json) => {
+                console.log(json)
                 const uid = json.id;
                 if (json.statusCode === 200){
                     this.setState({loading : false});
                     this.props.onLogin(uid);
-                    this.props.history.replace("/donors");
+                    this.props.history.replace("/available");
                 }
                 else {
                     console.log("Error here")
@@ -176,6 +199,22 @@ class Auth extends Component{
                             validators={['required', 'isLongEnough']}
                             errorMessages={['This field is required', 'Password must be longer than 6 characters']}
                         /><br/>
+                        <TextValidator
+                            className = {this.props.classes.TextFields}
+                            label="User Type (I/H)"
+                            type="user"
+                            onChange={this.handleChange}
+                            name="user"
+                            value={this.state.user}
+                        /><br/>
+                {/* <RadioGroup
+                    aria-label="User"
+                    name="user"
+                    value={this.props.user}
+                    onChange={this.props.handleChange}>
+                    <FormControlLabel value="hospital" control={<Radio />} label="Hospital" />
+                    <FormControlLabel value="individual" control={<Radio />} label="Individual" />
+                </RadioGroup><br/> */}
                         <Button 
                             type="submit" 
                             variant="contained" 
@@ -192,7 +231,8 @@ class Auth extends Component{
 const mapStateToProps = state => {
     return{
         isAuth : state.auth.isAuth,
-        isSignup : state.auth.isSignup
+        isSignup : state.auth.isSignup,
+        isHospital: state.auth.isHospital      
     }
 }
 
@@ -203,7 +243,9 @@ const mapDispatchToProps = dispatch => {
         onSignin : () => dispatch(actions.setSignin()),
         onSignup : () => dispatch(actions.setSignup()),
         onSetRegistered : () => dispatch(actions.registeredDonor()),
-        onSetRequestedDonors : (uid) => dispatch(actions.setRequests(uid))
+        onSetRequestedDonors : (uid) => dispatch(actions.setRequests(uid)),
+        onSetHospital : (isHospital) => dispatch(actions.setHospital(isHospital))
+        
     }
 }
 

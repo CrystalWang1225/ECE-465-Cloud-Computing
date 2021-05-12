@@ -1,6 +1,7 @@
 import React from 'react';
 
 import ExpansionPanel from '../UI/ExpansionPanel/ExpansionPanel';
+import { AccordionDetails } from '@material-ui/core';
 import Aux from '../../hoc/Auxiliary/Auxiliary';
 
 // Material UI Imports start
@@ -9,27 +10,28 @@ import Button from '@material-ui/core/Button';
 
 
 const donor = (props) => {
-    console.log(props)
+    console.log("props", props.disabled)
     const content = (
       <Aux>
-        Gender : {props.gender}<br/> 
         Age : {props.age}<br/>
-        Phone : {props.phone} <br/>
         Area : {props.area}<br/>
+        Hospital: {props.hospital}<br/>
+        BloodType: {props.bloodGroup}<br/>
+
         <Button 
           type="submit" 
           variant="contained" 
           color="secondary"
           disabled = {props.disabled}
           onClick = {props.clicked}
-          className = "req-btn">Request This Blood Bag</Button>
+          className = "req-btn">Request Blood Bag</Button>
       </Aux>
     );
 
     return(
-        <ExpansionPanel
+        < ExpansionPanel
           donors = {true}
-          heading = {`${props.name} (${props.bloodGroup})`}
+          heading = {`${props.area} (${props.bloodGroup})`}
           content = {content}/>
     )
 }

@@ -4,7 +4,9 @@ import Card from '../../hoc/Card/Card';
 import Requester from './Requester/Requester';
 import './Requests.css';
 const requests = (props) =>{
+    console.log("props for request", props)
     return(
+        
         <Card>
             <div>
                 <h2 className = "h3 font-weight-bold req-heading">Requests</h2>

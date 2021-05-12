@@ -1,6 +1,5 @@
 import * as actionTypes from './actionTypes';
-import firebase from "firebase/app";
-import "firebase/database";
+
 
 
 export const setSignin = () => {
@@ -27,13 +26,24 @@ export const logout = () => {
         type : actionTypes.LOGOUT
     }
 }
-
+export const setHospital = (isHospital) => {
+    console.log("isHospital", isHospital)
+    return {
+        type: actionTypes.SET_HOSPITAL,
+        isHospital
+    }
+}
 export const registeredDonor = () => {
     return{
         type : actionTypes.REGISTERED_DONOR
     }
 }
-
+export const setRegistered = (bloodbags) => {
+    return{
+        type: actionTypes.SET_REQUESTED_BAGS,
+        bloodbags
+    }
+}       
 export const setRequestedDonors = (requestedDonors) => {
     return{
         type : actionTypes.SET_REQUESTED_DONORS,
@@ -43,18 +53,18 @@ export const setRequestedDonors = (requestedDonors) => {
 
 export const setRequests = (uid) => {
     return dispatch => {
-        firebase.database()
-            .ref('/requests')
-            .orderByChild('from')
-            .equalTo(uid)
-            .on('value', snapshot => {
-                const retObj = snapshot.val();
-                let requestedDonors = [];
-                for(let key in retObj){
-                    if(retObj[key].status !== "2" && retObj[key].status !== "3")
-                        requestedDonors.push({id : key, ...retObj[key]})
-                }
-                dispatch(setRequestedDonors(requestedDonors))            
-            })
+        // firebase.database()
+        //     .ref('/requests')
+        //     .orderByChild('from')
+        //     .equalTo(uid)
+        //     .on('value', snapshot => {
+        //         const retObj = snapshot.val();
+        //         let requestedDonors = [];
+        //         for(let key in retObj){
+        //             if(retObj[key].status !== "2" && retObj[key].status !== "3")
+        //                 requestedDonors.push({id : key, ...retObj[key]})
+        //         }
+            //     dispatch(setRequestedDonors(requestedDonors))            
+            // })
     }
 }

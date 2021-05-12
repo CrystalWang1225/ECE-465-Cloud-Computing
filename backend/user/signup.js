@@ -6,6 +6,7 @@ const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-depe
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports.signup = (event, context, callback) => {
+  console.log(event.headers);
   var timeStamp = new Date().getTime();
   var userData = JSON.parse(event.body);
   var userEmail = userData.email;

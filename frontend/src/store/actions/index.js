@@ -4,7 +4,9 @@ export {
     login,
     logout,
     registeredDonor,
-    setRequests
+    setRequests,
+    setHospital,
+    setRegistered
 } from './auth';
 
 export {

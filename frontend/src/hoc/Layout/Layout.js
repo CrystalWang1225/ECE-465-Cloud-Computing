@@ -7,10 +7,10 @@ import Aux from "../../hoc/Auxiliary/Auxiliary";
 
 // Containers to be rendered using routing
 import Auth from "../../containers/Auth/Auth";
-import Profile from "../../containers/Profile/Profile";
-import Donors from "../../containers/Donors/Donors";
+import Availability from "../../containers/Avail/Availability"
+import Donation from "../../containers/Donation/Donation";
 import Logout from "../../containers/Auth/Logout/Logout";
-import Account from "../../containers/Account/Account"
+import Account from "../../containers/Account/Account";
 
 class Layout extends Component {
   render() {
@@ -24,10 +24,10 @@ class Layout extends Component {
     if (this.props.isAuth) {
       routes = (
         <Switch>
-          <Route path="/profile" component={Profile} />
+          <Route path="/available" component={props => <Availability {...props} />} />
           <Route path="/auth" component={Auth} />
-          <Route path="/donors" component={Donors} />
-          <Route path="/account" component={Account} />
+          <Route path="/donor" component={Donation} />
+          <Route path="/view" component={Account} />
           <Route path="/logout" component={Logout} />
           <Route path="/" exact component={Auth} />
         </Switch>
