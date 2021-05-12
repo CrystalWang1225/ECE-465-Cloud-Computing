@@ -95,7 +95,7 @@ module.exports.signup = (event, context, callback) => {
       body: JSON.stringify({
         "statusCode": 200,
         "message": "Register success",
-        "id": registeredID
+        "item": createParams.Item,
       }),
     };
     callback(null, response);

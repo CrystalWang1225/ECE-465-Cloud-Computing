@@ -57,7 +57,7 @@ module.exports.login = (event, context, callback) => {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "OPTIONS, POST, GET"
         },
-        body: JSON.stringify({"message": "Login Successful", "id": dbUserEntry.id, "statusCode": 200}),
+        body: JSON.stringify({"statusCode": 200,"message": "Login Successful", "item": dbUserEntry,}),
       };
       callback(null, response);
     }

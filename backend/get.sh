@@ -1,1 +1,0 @@
-curl https://0y6pzvqls1.execute-api.us-east-1.amazonaws.com/dev/todos/aaeb8510-a2ee-11eb-ad05-b7ed434c3d21

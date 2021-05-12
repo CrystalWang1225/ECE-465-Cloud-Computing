@@ -21,24 +21,56 @@ module.exports.donationList = (event, context, callback) => {
         headers: { "Access-Control-Allow-Headers" : "Content-Type",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "OPTIONS, POST, GET, PUT" },
-        body: JSON.stringify({"message": "Couldn\'t fetch a blood list."}),
+        body: JSON.stringify({"message": "Couldn\'t fetch a hospital list."}),
       });
       return;
     }
 
     // create a response
     var itemsArray = [];
+    var itemjson;
     /*for(var i = 0; i < result.Items.length; i++){
       itemsArray.push(result.Items[i]);
     }*/
     result.Items.forEach(item => {
-        itemsArray.push(JSON.parse(JSON.stringify(item)));
+      itemjson = JSON.parse(JSON.stringify(item));
+      console.log(itemjson);
+      var bloodParams = {
+        TableName: process.env.BLOOD_TABLE,
+        FilterExpression : "#item_bloodGroup = :this_group and #item_hospitalID = :this_hospitalID",
+        ExpressionAttributeNames: {
+          "#item_bloodGroup": "bloodGroup",
+          "#item_hospitalID": "hospitalID",
+        },
+        ExpressionAttributeValues: {
+          ":this_group": String(this_bloodGroup),
+          ":this_hospitalID": String(item.id),
+        }
+      };
+      dynamoDb.scan(bloodParams, (this_error,this_result) => {
+        if (this_error) {
+          console.error(this_error);
+          callback(null, {
+            statusCode: error.statusCode || 501,
+            headers: { "Access-Control-Allow-Headers" : "Content-Type",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "OPTIONS, POST, GET, PUT" },
+            body: JSON.stringify({"message": "Couldn\'t fetch a blood list for a hospital"}),
+          });
+          return;
+        }
+        var bloodcount = this_result.Items.length;
+        console.log(itemjson.name);
+        console.log(bloodcount);
+        itemjson["bloodCount"] = bloodcount;
+      });
+      itemsArray.push(itemjson);
     });
     itemsArray.sort((obj1, obj2) => {
-      if(obj1[String(this_bloodGroup)] > obj2[String(this_bloodGroup)]){
+      if(obj1["bloodCount"] > obj2["bloodCount"]){
         return -1;
       }
-      else if(obj1[String(this_bloodGroup)] == obj2[String(this_bloodGroup)]){
+      else if(obj1["bloodCount"] == obj2["bloodCount"]){
         return 0;
       }
       else{
