@@ -53,8 +53,8 @@ class RegisterDonor extends Component {
             return true;
         });
 
-        ValidatorForm.addValidationRule('isElevenDigits', (value) => {
-            if (value.trim().length < 11 || value.trim().length > 11  ) {
+        ValidatorForm.addValidationRule('isTenDigits', (value) => {
+            if (value.trim().length < 10 || value.trim().length > 10  ) {
                 return false;
             }
             return true;
@@ -127,15 +127,6 @@ class RegisterDonor extends Component {
                     value={this.props.phone}
                     validators={['required','matchRegexp:^[0-9]*$','isTenDigits']}
                     errorMessages={['This field is required', 'Invalid Phone Number','Phone Number must have 10 digits']}/><br/>
-    
-                <TextValidator
-                    className = {this.props.classes.TextFields}
-                    label="Area"
-                    onChange={this.props.handleChange}
-                    name="area"
-                    value={this.props.area}
-                    validators={['required','isSmallEnough']}
-                    errorMessages={['This field is required', 'Maximum 255 Characters are allowed']}/><br/>
                 
                 {/* <FormControlLabel
                     control={<Switch

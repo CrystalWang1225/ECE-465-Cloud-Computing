@@ -46,6 +46,11 @@ class Availability extends Component{
             const bloodBag = []
             console.log("response", response)
             for (let blood in response){
+              // If the blood bag has been requested, not showing on the availability page
+                if (response[blood].requested === "true" 
+                 || response[blood].requested === true){
+                  continue
+                }
                 bloodBag.push({id: blood, ...response[blood]})
             }
             console.log(bloodBag)
@@ -129,7 +134,8 @@ class Availability extends Component{
             },
             body: JSON.stringify({
                "id": id,
-               "userID": this.props.uid
+               "requesterID": this.props.uid,
+               "requested": true
             })
     }).then(response => response.json())
         .then((json) => {
@@ -162,7 +168,7 @@ class Availability extends Component{
               area = {donor.area}
               hospital = {donor.hospital}
               bloodGroup = {donor.bloodGroup}
-            //   disabled = {donor.userID === this.props.uid || this.state.hasRequested}
+             disabled = {this.state.hasRequested}
               clicked = {() => this.clickedHandler(donor.id)}
               />
           )
