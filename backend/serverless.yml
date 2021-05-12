@@ -9,6 +9,7 @@ provider:
     BLOOD_TABLE: ${self:service}-bloodTable
     DONATION_TABLE: ${self:service}-donationTable
     HOSPITAL_TABLE: ${self:service}-hospitalTable
+    REQUEST_TABLE: ${self:service}-requestTable
     APP_SECRET: qZVUS7jsA33pnM6Vi8KG
     APP_BASE_URL: "http://localhost:3000"
   iam:
@@ -27,6 +28,7 @@ provider:
             - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.BLOOD_TABLE}"
             - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DONATION_TABLE}"
             - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.HOSPITAL_TABLE}"
+            - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.REQUEST_TABLE}"
   lambdaHashingVersion: 20201221
   httpApi:
     cors: true
@@ -130,6 +132,24 @@ functions:
           path: hospital/create
           method: post
           cors: true
+  hospitalRequest:
+    handler: hospital/hospitalRequest.hospitalRequest
+    events:
+      - http:
+          path: hospital/request
+          method: post
+          cors: true
+  hospitalDonations:
+    handler: hospital/hospitalDonations.hospitalDonations
+    events:
+      - http:
+          path: hospital/donations/{id}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                id: true
 
 
 
@@ -260,4 +280,20 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:provider.environment.HOSPITAL_TABLE}
+    requestTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Delete
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.REQUEST_TABLE}  
     
