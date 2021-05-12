@@ -37,7 +37,7 @@ module.exports.createHospital = (event, context, callback) => {
     if(result.Items.length == 0){
       console.log("No existing user with this email, OK");
       var createParams = {
-          TableName: process.env.USER_TABLE,
+          TableName: process.env.HOSPITAL_TABLE,
           Item: {
               id: registeredID,
               createdAt: timeStamp,
