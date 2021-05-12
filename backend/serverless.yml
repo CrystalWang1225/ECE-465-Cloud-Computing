@@ -112,7 +112,24 @@ functions:
             parameters:
               paths:
                 id: true
-
+  hospitalBlood:
+    handler: user/hospitalBlood.hospitalBlood
+    events:
+      - http:
+          path: hospital/blood/{id}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                id: true                
+  createHospital:
+    handler: hospital/createHospital.createHospital
+    events:
+      - http:
+          path: hospital/create
+          method: post
+          cors: true
 
 
 

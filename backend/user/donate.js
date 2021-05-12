@@ -9,22 +9,17 @@ module.exports.donate = (event, context, callback) => {
   const timestamp = new Date().getTime();
   const donationData = JSON.parse(event.body);
   
-  const params = 
+  var params = 
   {
     TableName: process.env.DONATION_TABLE,
     Item: {
       id: uuid.v1(),
-      donorName: donationData.donorName,
-      donorAge: donationData.donorAge,
-      donorID: donationData.donorID,
-      hospitalName: donationData.hospitalName,
-      hospitalID: donationData.hospitalID,
-      area: donationData.area,
-      bloodGroup: donationData.bloodGroup,
-      createdAt: timestamp,
-      updatedAt: timestamp,
+
     },
   };
+  for(var field in donationData){
+    params.Item[field] = donationData[field];
+  }
   //Set which table to create item in
   //Set item fields
   // write the todo to the database
