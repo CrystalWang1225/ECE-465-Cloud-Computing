@@ -14,7 +14,8 @@ module.exports.donate = (event, context, callback) => {
     TableName: process.env.DONATION_TABLE,
     Item: {
       id: uuid.v1(),
-
+      createdAt: timestamp,
+      updatedAt: timestamp,
     },
   };
   for(var field in donationData){

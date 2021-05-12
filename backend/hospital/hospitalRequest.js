@@ -14,7 +14,7 @@ module.exports.hospitalRequest = (event, context, callback) => {
     TableName: process.env.REQUEST_TABLE,
     Item: {
       id: uuid.v1(),
-      createdTime: timestamp
+      createdAt: timestamp
     },
   };
   for(var field in requestData){
