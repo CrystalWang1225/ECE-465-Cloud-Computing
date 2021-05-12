@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 const appt = (props) => {
     const content = (
       <Aux>
+        Donor Name: {props.name}<br/>
         Age : {props.age}<br/>
         Area : {props.area}<br/>
         Hospital: {props.hospital}<br/>

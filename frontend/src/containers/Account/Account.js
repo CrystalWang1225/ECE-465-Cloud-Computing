@@ -106,9 +106,9 @@ class Account extends Component{
     render(){
         let bloodReserves = this.state.bloodReserves
         let bloodAppointment = this.state.bloodAppointment
-      if(this.state.bloodReserves == [])
+      if(this.state.bloodReserves === [])
         bloodReserves = <p>You have not yet requested any blood bags</p>
-      if(this.state.bloodAppointment == [])
+      if(this.state.bloodAppointment === [])
         bloodAppointment = <p>You have not yet donation Appointments</p>
 
     //   else if(this.state.donors.length <= 0)  
@@ -131,6 +131,7 @@ class Account extends Component{
             return(
               <Appt
                 key = {blood.id} 
+                name = {blood.donorName}
                 id = {blood.id}
                 age = {blood.donorAge}
                 area = {blood.area}
