@@ -52,6 +52,7 @@ module.exports.hospitalRequest = (event, context, callback) => {
           id: uuid.v1(),
           createdAt: timestamp,
           bloodGroup: requestData.bloodGroup,
+          numberBags: requestData.numberBags,
           hospitalID: scannedID,
         },
       };
