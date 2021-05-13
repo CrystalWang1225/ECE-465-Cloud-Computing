@@ -45,7 +45,7 @@ class Navbar extends React.Component {
         <AppBar position="static" className={classes.own}>
           <StyledTabs centered value={value} onChange={this.handleChange}>
           {this.props.isAuth ? <Tab label="Availability" onClick ={() => this.buttonClickedHandler("/available")}/>  : null}
-          {this.props.isAuth ? <Tab label="Become Donor" onClick ={() => this.buttonClickedHandler("/donor")}/> : null}
+          {this.props.isAuth ? <Tab label="Donation Center" onClick ={() => this.buttonClickedHandler("/donor")}/> : null}
           {this.props.isAuth ? <Tab label="My Account" onClick ={() => this.buttonClickedHandler("/view")}/>  : null}
           {this.props.isAuth ? <Tab label="Logout" onClick ={this.logout} />: null}
           </StyledTabs>

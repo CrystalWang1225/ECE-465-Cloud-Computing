@@ -23,48 +23,88 @@ class Availability extends Component{
             donors : [],
             possibleGroups : '',
             area: '',
-            hasRequested: false
+            hasRequested: false,
           }
     }
-//     timeString = '';
 
     componentDidMount() {
-      console.log("props", this.props)
-        fetch(API_URL+'/dev/user/list',{
-            method:'GET',
-            mode: 'cors',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                "Access-Control-Request-Method": "GET",
-                "Access-Control-Request-Headers": "Content-Type",
-                "Origin" : "http://localhost:3000",
+      //console.log("props", this.props)
+      if (this.props.isHospital){
+        // For hospital use
+        fetch(API_URL+'/dev/hospital/blood/' + this.props.uid, {
+          method:'GET',
+          mode: 'cors',
+          headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              "Access-Control-Request-Method": "GET",
+              "Access-Control-Request-Headers": "Content-Type",
+              "Origin" : "http://localhost:3000",
 
-            }
-    }).then(response => response.json())
-    .then((response) => {
-            const bloodBag = []
-            console.log("response", response)
-            for (let blood in response){
-              // If the blood bag has been requested, not showing on the availability page
-                if (response[blood].requested === "true" 
-                 || response[blood].requested === true){
-                  continue
-                }
-                bloodBag.push({id: blood, ...response[blood]})
-            }
-            console.log(bloodBag)
-            this.props.onSetDonors(bloodBag)
-            console.log(this.state)
-            this.handleChange(this.state.bloodGroup)
-        })
-        .catch(error => {
-            this.setState({loading : false});
-            let errorMessage = '';  
-             errorMessage = error.message;
-            console.log(errorMessage)
-            this.setState({error : errorMessage})
-        });
+          }
+  }).then(response => response.json())
+  .then((response) => {
+          const bloodBag = []
+          console.log("hospital response", response)
+          for (let blood in response){
+            // If the blood bag has been requested, not showing on the availability page
+              if (response[blood].requested === "true" 
+               || response[blood].requested === true){
+                continue
+              }
+              bloodBag.push({id: blood, ...response[blood]})
+          }
+          console.log(bloodBag)
+          this.props.onSetDonors(bloodBag)
+          console.log(this.state)
+          this.handleChange(this.state.bloodGroup)
+      })
+      .catch(error => {
+          this.setState({loading : false});
+          let errorMessage = '';  
+           errorMessage = error.message;
+          console.log(errorMessage)
+          this.setState({error : errorMessage})
+      });
+
+      }else{
+        // For individuals to view all the availabilities
+        fetch(API_URL+'/dev/user/list',{
+          method:'GET',
+          mode: 'cors',
+          headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              "Access-Control-Request-Method": "GET",
+              "Access-Control-Request-Headers": "Content-Type",
+              "Origin" : "http://localhost:3000",
+
+          }
+  }).then(response => response.json())
+  .then((response) => {
+          const bloodBag = []
+          console.log("response", response)
+          for (let blood in response){
+            // If the blood bag has been requested, not showing on the availability page
+              if (response[blood].requested === "true" 
+               || response[blood].requested === true){
+                continue
+              }
+              bloodBag.push({id: blood, ...response[blood]})
+          }
+          console.log(bloodBag)
+          this.props.onSetDonors(bloodBag)
+          console.log(this.state)
+          this.handleChange(this.state.bloodGroup)
+      })
+      .catch(error => {
+          this.setState({loading : false});
+          let errorMessage = '';  
+           errorMessage = error.message;
+          console.log(errorMessage)
+          this.setState({error : errorMessage})
+      });
+      }
     }
 
     handleChange = bloodGroup => {
@@ -163,13 +203,14 @@ class Availability extends Component{
         donors = this.state.donors.map(donor => {
           return(
             <Avail
-              key = {donor.id} 
-              age = {donor.age}
+              key = {donor.id}
+              name = {donor.donorName} 
               area = {donor.area}
-              hospital = {donor.hospital}
+              hospital = {donor.hospitalName}
               bloodGroup = {donor.bloodGroup}
-             disabled = {this.state.hasRequested}
+              disabled = {this.state.hasRequested}
               clicked = {() => this.clickedHandler(donor.id)}
+              isHospital = {this.props.isHospital}
               />
           )
         })

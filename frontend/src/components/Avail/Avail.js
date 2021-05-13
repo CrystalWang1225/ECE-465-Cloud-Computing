@@ -11,27 +11,39 @@ import Button from '@material-ui/core/Button';
 
 const donor = (props) => {
     console.log("props", props.disabled)
-    const content = (
+    let content;
+    if (props.isHospital === true){
+      content = (
+        <Aux>
+          Donor Name: {props.name}<br/>
+          Area : {props.area}<br/>
+          Hospital: {props.hospital}<br/>
+          BloodType: {props.bloodGroup}<br/>
+        </Aux>
+      );
+    }else {
+      content = (
       <Aux>
-        Age : {props.age}<br/>
-        Area : {props.area}<br/>
-        Hospital: {props.hospital}<br/>
-        BloodType: {props.bloodGroup}<br/>
+      Area : {props.area}<br/>
+      Hospital: {props.hospital}<br/>
+      BloodType: {props.bloodGroup}<br/>
 
-        <Button 
-          type="submit" 
-          variant="contained" 
-          color="secondary"
-          disabled = {props.disabled}
-          onClick = {props.clicked}
-          className = "req-btn">Request Blood Bag</Button>
-      </Aux>
-    );
+      <Button 
+        type="submit" 
+        variant="contained" 
+        color="secondary"
+        disabled = {props.disabled}
+        onClick = {props.clicked}
+        className = "req-btn">Request Blood Bag</Button>
+    </Aux>
+  );
+    }
+    
 
     return(
         < ExpansionPanel
           donors = {true}
-          heading = {`${props.area} (${props.bloodGroup})`}
+          heading = {`Blood Bag at: ${props.area} (${props.bloodGroup})`}
           content = {content}/>
     )
 }

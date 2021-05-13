@@ -50,6 +50,7 @@ class Auth extends Component{
     }
 
     componentDidMount() {
+        console.log("the very start props", this.props)
         ValidatorForm.addValidationRule('isLongEnough', (value) => {
             if (value.trim().length < 6) {
                 return false;
@@ -93,7 +94,7 @@ class Auth extends Component{
                 console.log("Successfully signed up!")
                 this.setState({loading : false});
                 this.props.onLogin(uid);
-                const isHospital = this.state.isHospital
+                const isHospital = this.state.item.isHospital
                 this.props.onSetHospital(isHospital);
                 this.props.history.replace("/available");
                 }
@@ -134,10 +135,13 @@ class Auth extends Component{
         }).then(response => response.json())
             .then((json) => {
                 console.log(json)
-                const uid = json.id;
+                const uid = json.item.id;
                 if (json.statusCode === 200){
                     this.setState({loading : false});
                     this.props.onLogin(uid);
+                    this.setState({isHospital: json.item.isHospital})
+                    const isHospital = this.state.isHospital
+                    this.props.onSetHospital(isHospital);
                     this.props.history.replace("/available");
                 }
                 else {

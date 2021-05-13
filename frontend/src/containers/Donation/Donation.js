@@ -4,8 +4,8 @@ import {connect} from 'react-redux';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import Requests from '../../components/Requests/Requests';
 import * as actions from '../../store/actions/index';
-import Dialog from '../../components/UI/Dialog/Dialog';
-import RegisterDonor from '../../components/RegisterDonor/RegisterDonor'
+import RegisterDonor from '../../components/RegisterDonor/RegisterDonor'; 
+import BroadcastRequest from '../../components/BroadcastRequest/BroadcastRequest'
 import './Donation.css';
 import Hospital from '../../components/Hospital/Hospital';
 
@@ -16,7 +16,7 @@ class Donation extends Component{
         phone : '',
         age : '',
         area : '',
-        bloodGroup : 'A+',
+        bloodGroup : 'O-',
         name : '',
         gender : 'male',
         available : true,
@@ -29,59 +29,87 @@ class Donation extends Component{
         donatedAt : '',
         donatedTo : '',
         dialogOpen : false,
-        hospitals :[]
+        hospitals :[],
+        numberBags : 1
     }
 
     componentDidMount(){
-        console.log("Hi YA ")
+        console.log("props!!!! ", this.props.isHospital)
     }
 
     // Form control functions start
     handleChange = (event) => {
-        console.log("changing")
         this.setState({ [event.target.name] : event.target.value });
     }
 
     handleSubmit = () => {
-        console.log("Setting state")
         this.setState({loading: true});
         const {name,age,area,bloodGroup,gender,phone,available,donatedAt,donatedTo} = this.state;
         console.log("statu", this.state);
         console.log("props", this.props)
-        
-        //Recommendation algorithms a the backend
-        fetch(API_URL+'/dev/user/donate/'+ bloodGroup,{
-            method:'GET',
-            mode: 'cors',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                "Access-Control-Request-Method": "GET",
-                "Access-Control-Request-Headers": "Content-Type",
-                "Origin" : "http://localhost:3000",
-
-            }
-    }).then(response => response.json())
-    .then((response) => {
-            const hospitals = []
-            console.log("response", response)
-            for (let hos in response){
-                hospitals.push({id: hos, ...response[hos]})
-            }
-            console.log("hospitals", hospitals)
-            this.setState({loading: false});
-            // this.props.onSetDonors(bloodBag)
-            this.setState({hospitals : hospitals})
-            this.handleChange(this.state.bloodGroup)
-        })
-        .catch(error => {
-            this.setState({loading : false});
-            let errorMessage = '';  
-             errorMessage = error.message;
-            console.log(errorMessage)
-            this.setState({error : errorMessage})
-        });
-        
+        if (this.props.isHospital === true){
+            fetch(API_URL+'/dev/hospital/request' ,{
+                method:'POST',
+                mode: 'cors',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    "Access-Control-Request-Method": "POST",
+                    "Access-Control-Request-Headers": "Content-Type",
+                    "Origin" : "http://localhost:3000",
+           
+                },
+                body: JSON.stringify({
+                   "userID": this.props.uid,
+                   "bloodGroup": this.state.bloodGroup,
+                   "numberBags": this.state.numberBags,
+                })
+           }).then(response => response.json())
+            .then((json) => {
+                console.log("requested for emergency!")
+                this.setState({loading : false});
+                this.setState({hasRequested : true})
+            })
+            .catch(error => {
+                this.setState({loading : false});
+                let errorMessage = '';  
+                 errorMessage = error.message;
+                console.log(errorMessage)
+                this.setState({error : errorMessage})
+            });
+           
+        }else {//Recommendation algorithms a the backend
+            fetch(API_URL+'/dev/user/donate/'+ bloodGroup,{
+                method:'GET',
+                mode: 'cors',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    "Access-Control-Request-Method": "GET",
+                    "Access-Control-Request-Headers": "Content-Type",
+                    "Origin" : "http://localhost:3000",
+    
+                }
+        }).then(response => response.json())
+        .then((response) => {
+                const hospitals = []
+                console.log("response", response)
+                for (let hos in response){
+                    hospitals.push({id: hos, ...response[hos]})
+                }
+                console.log("hospitals", hospitals)
+                this.setState({loading: false});
+                // this.props.onSetDonors(bloodBag)
+                this.setState({hospitals : hospitals})
+                this.handleChange(this.state.bloodGroup)
+            })
+            .catch(error => {
+                this.setState({loading : false});
+                let errorMessage = '';  
+                 errorMessage = error.message;
+                console.log(errorMessage)
+                this.setState({error : errorMessage})
+            });}   
     }
 
     clickedHandler = (hospital) => {
@@ -145,17 +173,25 @@ class Donation extends Component{
     }</div>
             <div/>      
             <div className = "register-form">
-            <RegisterDonor
-                name = {this.state.name}
-                age = {this.state.age}
-                gender = {this.state.gender}
-                bloodGroup = {this.state.bloodGroup}
-                phone = {this.state.phone}
-                available = {this.state.available}
-                error = {this.state.error}
-                isDonor = {this.props.isDonor}
-                handleSubmit = {this.handleSubmit}
-                handleChange = {this.handleChange}/>
+            {this.props.isHospital ?<BroadcastRequest
+            bloodGroup = {this.state.bloodGroup}
+            numberBags = {this.state.numberBags}
+            handleSubmit = {this.handleSubmit}
+            handleChange = {this.handleChange}
+            />
+            : <RegisterDonor
+            name = {this.state.name}
+            age = {this.state.age}
+            gender = {this.state.gender}
+            bloodGroup = {this.state.bloodGroup}
+            phone = {this.state.phone}
+            available = {this.state.available}
+            error = {this.state.error}
+            isDonor = {this.props.isDonor}
+            handleSubmit = {this.handleSubmit}
+            handleChange = {this.handleChange}/>
+    } 
+           
         </div>
         </div>
         )
