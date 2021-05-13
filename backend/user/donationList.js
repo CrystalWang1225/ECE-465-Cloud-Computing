@@ -27,63 +27,85 @@ module.exports.donationList = (event, context, callback) => {
     }
 
     // create a response
-    var itemsArray = [];
+    var itemsArray = result.Items;
+    var bloodCountSet = {};
+    for(var i = 0; i < itemsArray.length; i++){
+      itemsArray[i]["bloodCount"] = 0;
+      bloodCountSet[String(itemsArray[i].id)] = 0;
+    }
+    var returnArray = [];
     var itemjson;
+    var hospitalCount = 0;
     /*for(var i = 0; i < result.Items.length; i++){
       itemsArray.push(result.Items[i]);
     }*/
-    result.Items.forEach(item => {
-      itemjson = JSON.parse(JSON.stringify(item));
-      console.log(itemjson);
-      var bloodParams = {
-        TableName: process.env.BLOOD_TABLE,
-        FilterExpression : "#item_bloodGroup = :this_group and #item_hospitalID = :this_hospitalID",
-        ExpressionAttributeNames: {
-          "#item_bloodGroup": "bloodGroup",
-          "#item_hospitalID": "hospitalID",
-        },
-        ExpressionAttributeValues: {
-          ":this_group": String(this_bloodGroup),
-          ":this_hospitalID": String(item.id),
-        }
-      };
-      dynamoDb.scan(bloodParams, (this_error,this_result) => {
-        if (this_error) {
-          console.error(this_error);
-          callback(null, {
-            statusCode: error.statusCode || 501,
-            headers: { "Access-Control-Allow-Headers" : "Content-Type",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "OPTIONS, POST, GET, PUT" },
-            body: JSON.stringify({"message": "Couldn\'t fetch a blood list for a hospital"}),
-          });
-          return;
-        }
-        var bloodcount = this_result.Items.length;
-        console.log(itemjson.name);
-        console.log(bloodcount);
-        itemjson["bloodCount"] = bloodcount;
-      });
-      itemsArray.push(itemjson);
-    });
-    itemsArray.sort((obj1, obj2) => {
-      if(obj1["bloodCount"] > obj2["bloodCount"]){
-        return -1;
+      //console.log(itemjson);
+    var bloodParams = {
+      TableName: process.env.BLOOD_TABLE,
+      FilterExpression : "#item_bloodGroup = :this_group",
+      ExpressionAttributeNames: {
+        "#item_bloodGroup": "bloodGroup",
+      },
+      ExpressionAttributeValues: {
+        ":this_group": String(this_bloodGroup),
       }
-      else if(obj1["bloodCount"] == obj2["bloodCount"]){
-        return 0;
+    };
+    dynamoDb.scan(bloodParams, (this_error,this_result) => {
+      if (this_error) {
+        console.error(this_error);
+        callback(null, {
+          statusCode: error.statusCode || 501,
+          headers: { "Access-Control-Allow-Headers" : "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "OPTIONS, POST, GET, PUT" },
+          body: JSON.stringify({"message": "Couldn\'t fetch a blood list for a hospital"}),
+        });
+        return;
+      }
+      if(this_result.length == 0){
+        console.log("No need to sort");
+        callback(null, {
+          statusCode: error.statusCode || 501,
+          headers: { "Access-Control-Allow-Headers" : "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "OPTIONS, POST, GET, PUT" },
+          body: JSON.stringify(itemsArray),
+        });
+        return;
       }
       else{
-        return 1;
+        console.log("Sorting by amount of blood in this bloodGroup");
+        for(var j = 0; j < this_result.Items.length; j++){
+          var this_blood = this_result.Items[j];
+          if(this_blood.requested != "true"){
+            bloodCountSet[String(this_blood.hospitalID)] += 1;
+          }
+          console.log(bloodCountSet[String(this_blood.hospitalID)]);
+        }
+        for(var k = 0; k < itemsArray.length; k++){
+          itemsArray[k].bloodCount = bloodCountSet[itemsArray[k].id];
+          console.log(itemsArray[k].bloodCount);
+        }
+        itemsArray.sort((obj1, obj2) => {
+          if(obj1["bloodCount"] < obj2["bloodCount"]){
+            return -1;
+          }
+          else if(obj1["bloodCount"] == obj2["bloodCount"]){
+            return 0;
+          }
+          else{
+            return 1;
+          }
+        });
+        const response = {
+          statusCode: 200,
+          headers: { "Access-Control-Allow-Headers" : "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "OPTIONS, POST, GET, PUT" },
+          body: JSON.stringify(itemsArray),
+        };
+        callback(null, response);
       }
     });
-    const response = {
-      statusCode: 200,
-      headers: { "Access-Control-Allow-Headers" : "Content-Type",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "OPTIONS, POST, GET, PUT" },
-      body: JSON.stringify(itemsArray),
-    };
-    callback(null, response);
   });
 };

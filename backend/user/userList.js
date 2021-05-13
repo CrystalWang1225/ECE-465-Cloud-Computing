@@ -31,7 +31,7 @@ module.exports.userList = (event, context, callback) => {
     }*/
     result.Items.forEach(item => {
         delete item["donorName"];
-        itemsArray.push(JSON.parse(JSON.stringify(item)));
+          itemsArray.push(JSON.parse(JSON.stringify(item)));
     });
     /*
     itemsArray.sort((obj1, obj2) => {
