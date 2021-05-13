@@ -21,5 +21,5 @@ Hospital accounts can view a list of blood bags stores in the hospital associate
 
 ### Databases
 <p align="center">
-  <img src="img/db.png" height=50% width=50%>
+  <img src="img/db.png" height=80% width=80%>
   </p><br/>
