@@ -1,5 +1,5 @@
 ## ECE465 Cloud Computing Final Project
-### Install serverless, Node.js and NPM  
+### Install serverless, Node.js and NPM for Linux system
 curl -o- -L https://slss.io/install | bash  
 sudo apt install node (or nodejs)  
 sudo apt install npm  
