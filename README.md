@@ -26,3 +26,4 @@ Our database uses multiple tables in DynamoDB to logically organize information.
   </p><br/>
   
 ### [Presentation Video](https://youtu.be/2vc7vx34X70)
+### [Presentaion Slides](https://github.com/CrystalWang1225/ECE-465-Cloud-Computing/blob/FinalProject/Cloud%20Computing%20Final%20Project%20Presentation.pdf)
