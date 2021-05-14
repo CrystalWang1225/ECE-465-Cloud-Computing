@@ -25,4 +25,4 @@ Our database uses multiple tables in DynamoDB to logically organize information.
   <img src="img/db.png" height=80% width=80%>
   </p><br/>
   
-### [Presentation Video] (https://youtu.be/2vc7vx34X70)
+### [Presentation Video](https://youtu.be/2vc7vx34X70)
